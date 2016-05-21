@@ -1,13 +1,13 @@
 
 # coding: utf-8
 
-# In[3]:
+# In[247]:
 
 # Tree equations required by the California Air Resources Board (ARB)
 # Used to calculate tree volume for projects located in California, Oregon, or Washington
 
 
-# In[4]:
+# In[248]:
 
 # These equations were translated from the PDF available on the ARB website: 
 # http://www.arb.ca.gov/cc/capandtrade/protocols/usforest/usforestprojects_2015.htm
@@ -15,19 +15,19 @@
 # http://www.arb.ca.gov/cc/capandtrade/protocols/usforest/2015/volume.equations.ca.or.wa.pdf
 
 
-# In[5]:
+# In[249]:
 
 import math
 
 
-# In[6]:
+# In[250]:
 
 # ARB-APPROVED VOLUME EQUATIONS ARE REPRODUCED BELOW AS FUNCTIONS
 # Each volume equation is a function that calculates a variety of variables.
 # These variables are materialized as a dictionary within the local volume equation/function environment.
 
 
-# In[7]:
+# In[251]:
 
 # This helper function is called within individual tree volume equations to return the volume or  
 # equation parameter requested by the user.
@@ -52,19 +52,53 @@ def get_metric(metric_dict, metric, wood_type):
                                        metric_dict['CVT'], metric_dict['TARIF'], metric_dict['HT'], metric)
 
 
-# In[8]:
+# In[252]:
+
+def calc_vol(DBH, HT, volume_metric, volume_equation):
+    '''
+    Checks for diameter limits for each volume metric.
+    WHERE:
+    DBH = tree diameter at breast height, in inches
+    HT = tree height
+    volume_metric = the cubic or boardfoot volume metric requested by the user
+    volume_equation = the cubic volume equation (function) requested by the user
+    '''
+    if volume_metric not in ['CVT', 'CVTS', 'CV4', 'CV6', 'CV8', 'SV616', 'SV632', 'XINT6', 'SV816', 'XINT8']:
+        raise ValueError(metric + " is not a recognized volume metric. metric must be one of 'CVT', 'CVTS', 'CV4', 'CV6', 'CV8', 'SV616', 'SV632', 'XINT6', 'SV816', or 'XINT8'.")
+    
+    if HT == 0:
+        return 0
+    elif DBH >= 11:
+        pass
+    elif volume_metric in ['CV8', 'SV816', 'XINT8']:
+        return 0
+    elif DBH >= 9:
+        pass
+    elif volume_metric in ['CV6', 'SV616', 'SV632', 'XINT6']:
+        return 0
+    elif DBH >= 5:
+        pass
+    elif volume_metric in ['CV4']:
+        return 0
+    elif DBH < 1:
+        return 0
+    
+    return volume_equation(DBH, HT, volume_metric)
+
+
+# In[253]:
 
 # THE VOLUME EQUATIONS
 
 
-# In[9]:
+# In[254]:
 
 # For species where there is no identified volume equation by ARB/CAR
 def Eq_None(DBH, HT, metric):
     return 0
 
 
-# In[10]:
+# In[255]:
 
 # Equation 1 Douglas-Fir (WEYERHAUSER-DNR RPT#24,1977)
 
@@ -104,7 +138,7 @@ def Eq_1(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[11]:
+# In[256]:
 
 # Equation 2 Douglas-Fir (DNR MEMO--SUMMERFIELD, 11/7/80)
 
@@ -141,7 +175,7 @@ def Eq_2(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[12]:
+# In[257]:
 
 # Equation 3 Douglas-Fir (USDA-FS RES NOTE PNW-266)
 
@@ -235,7 +269,7 @@ def Eq_3(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[13]:
+# In[258]:
 
 # Equation 4 Ponderosa pine (DNR MEMO--SUMMERFIELD,11/7/80)
 
@@ -273,7 +307,7 @@ def Eq_4(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[14]:
+# In[259]:
 
 # Equation 5 Ponderosa pine (USDA-FS RES NOTE PNW-266)
 
@@ -366,7 +400,7 @@ def Eq_5(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[15]:
+# In[260]:
 
 # Equation 6 Western hemlock (DNR NOTE 27,4/79)
 
@@ -403,7 +437,7 @@ def Eq_6(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[16]:
+# In[261]:
 
 # Equation 7 Western hemlock (BROWN (1962) BC FOREST SERV,P33)
 
@@ -440,7 +474,7 @@ def Eq_7(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[17]:
+# In[262]:
 
 # Equation 8 Redcedar (REDCEDAR INTERIOR--DNR RPT#24,1977)
 
@@ -480,7 +514,7 @@ def Eq_8(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[18]:
+# In[263]:
 
 # Equation 9 Redcedar (REDCEDAR COAST--DNR RPT#24,1977)
 
@@ -520,7 +554,7 @@ def Eq_9(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[19]:
+# In[264]:
 
 # Equation 10 True Firs (INTERIOR BALSAM--DNR RPT#24,1977)
 
@@ -560,7 +594,7 @@ def Eq_10(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[20]:
+# In[265]:
 
 # Equation 11 True Firs (COAST BALSAM--DNR RPT#24,1977)
 
@@ -600,7 +634,7 @@ def Eq_11(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[21]:
+# In[266]:
 
 # Equation 12 Spruce (SITKA SPRUCE INTERIOR--DNR RPT#24,1977)
 
@@ -640,7 +674,7 @@ def Eq_12(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[22]:
+# In[267]:
 
 # EQUATION 13 SPRUCE (SITKA SPRUCE MATURE--DNR RPT#24,1977)
 
@@ -680,14 +714,14 @@ def Eq_13(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[23]:
+# In[268]:
 
 # EQUATION 14 - OTHER JUNIPERS (CHOJNACKY, 1985)
 
 # Chojnacky D.C., 1985.  Pinyon-Juniper Volume Equations for the Central Rocky Mountain States.
 # Res. Note INT-339, USDA, Forest Service, Intermountain Res. Station, Ogden, UT 84401.
 
-def Eq_14(DRC, HT, STEMS, metric):
+def Eq_14(DRC, HT, metric, STEMS=1):
     """
     WHERE
     CVTS = cubic foot volume from ground level to a 1.5-inch minimum branch diameter (includes live wood, dead wood, and bark)
@@ -706,7 +740,7 @@ def Eq_14(DRC, HT, STEMS, metric):
     elif STEMS >1:
         S = 0
         
-    CVTS = (-0.13386 + (0.133726 * (Factor**(1/3))) + (0.036329 * S))**3
+    CVTS = (-0.13386 + (0.133726 * (Factor**(1./3.))) + (0.036329 * S))**3
     if CVTS <= 0:
         CVTS = 0.1
         
@@ -728,14 +762,14 @@ def Eq_14(DRC, HT, STEMS, metric):
             return 0 # no boardfoot volume according to CAR/ARB documentation
 
 
-# In[24]:
+# In[269]:
 
 # EQUATION 14.1 - SINGLELEAF PINYON (CHOJNACKY, 1985)
 
 # Chojnacky D.C., 1985.  Pinyon-Juniper Volume Equations for the Central Rocky Mountain States.
 # Res. Note INT-339, USDA, Forest Service, Intermountain Res. Station, Ogden, UT 84401.
 
-def Eq_141(DRC, HT, STEMS, metric):
+def Eq_141(DRC, HT, metric, STEMS=1):
     """
     WHERE
     CVTS = cubic foot volume from ground level to a 1.5-inch minimum branch diameter (includes live wood, dead wood, and bark)
@@ -753,7 +787,7 @@ def Eq_141(DRC, HT, STEMS, metric):
     elif STEMS >1:
         S = 0
         
-    CVTS = (-0.14240 + (0.148190 * (Factor**(1/3))) - (0.16712 * S))**3
+    CVTS = (-0.14240 + (0.148190 * (Factor**(1./3.))) - (0.16712 * S))**3
     if CVTS <= 0:
         CVTS = 0.1
         
@@ -775,7 +809,7 @@ def Eq_141(DRC, HT, STEMS, metric):
             return 0 # no boardfoot volume according to CAR/ARB documentation
 
 
-# In[25]:
+# In[270]:
 
 # EQUATION 14.2 - ROCKY MOUNTAIN JUNIPER (CHOJNACKY, 1985)
 
@@ -786,7 +820,6 @@ def Eq_142(DRC, HT, metric):
     """
     WHERE
     CVTS = cubic foot volume from ground level to a 1.5-inch minimum branch diameter (includes live wood, dead wood, and bark)
-    STEMS = number of stems 3 inches and larger within the first foot above DRC. When STEMS=1 it is a single stemmed tree
     DRC (inches) = Diameter at the root collar
     HT (feet) =  Total height of the tree 
     """
@@ -796,7 +829,7 @@ def Eq_142(DRC, HT, metric):
     else:
         Factor = 0
         
-    CVTS = (0.02434 + (0.119106 * (Factor**(1/3))))**3
+    CVTS = (0.02434 + (0.119106 * (Factor**(1./3.))))**3
     if CVTS <= 0:
         CVTS = 0.1
     
@@ -818,7 +851,7 @@ def Eq_142(DRC, HT, metric):
             return 0 # no boardfoot volume according to CAR/ARB documentation
 
 
-# In[26]:
+# In[271]:
 
 # EQUATION 15 LODGEPOLE PINE (LODGEPOLE PINE--DNR RPT#24,1977)
 
@@ -858,7 +891,7 @@ def Eq_15(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[27]:
+# In[272]:
 
 # EQUATION 16 LODGEPOLE PINE (USDA-FS RES NOTE PNW-266)
 
@@ -951,7 +984,7 @@ def Eq_16(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[28]:
+# In[273]:
 
 # EQUATION 17 MTN.HEMLOCK (BELL, OSU RES.BULL 35)
 
@@ -986,7 +1019,7 @@ def Eq_17(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[29]:
+# In[274]:
 
 # EQUATION 18 SHASTA RED FIR (USDA-FS RES NOTE PNW-266)
 
@@ -1079,7 +1112,7 @@ def Eq_18(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[30]:
+# In[275]:
 
 # EQUATION 19 INCENSE CEDAR (USDA-FS RES NOTE PNW-266)
 
@@ -1172,7 +1205,7 @@ def Eq_19(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[31]:
+# In[276]:
 
 # EQUATION 20 SUGAR PINE (USDA-FS RES NOTE PNW-266)
 
@@ -1265,7 +1298,7 @@ def Eq_20(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[32]:
+# In[277]:
 
 # EQUATION 21 W.JUNIPER (CHITTESTER,1984)
 
@@ -1305,7 +1338,7 @@ def Eq_21(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[33]:
+# In[278]:
 
 # EQUATION 22 W.LARCH (LARCH--DNR RPT#24,1977)
 def Eq_22(DBH, HT, metric):
@@ -1338,7 +1371,7 @@ def Eq_22(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[34]:
+# In[279]:
 
 # EQUATION 23 WHITE FIR (USDA-FS RES NOTE PNW-266)
 
@@ -1431,7 +1464,7 @@ def Eq_23(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[35]:
+# In[280]:
 
 # EQUATION 24 REDWOOD (Krumland, B.E. and L.E. Wensel. 1975. And DNR RPT#24,1977)
 
@@ -1467,7 +1500,7 @@ def Eq_24(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[36]:
+# In[281]:
 
 # EQUATION 25 ALDER (CURTIS/BRUCE, PNW-56)
 
@@ -1516,7 +1549,7 @@ def Eq_25(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[37]:
+# In[282]:
 
 # EQUATION 26 ALDER (BC-ALDER--DNR RPT#24,1977)
 
@@ -1557,7 +1590,7 @@ def Eq_26(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[38]:
+# In[283]:
 
 # EQUATION 27 COTTONWOOD (BC-COTTONWOOD--DNR RPT#24,1977)
 
@@ -1598,7 +1631,7 @@ def Eq_27(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[39]:
+# In[284]:
 
 # EQUATION 28 ASPEN (BC-ASPEN--DNR RPT#24,1977)
 
@@ -1639,7 +1672,7 @@ def Eq_28(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[40]:
+# In[285]:
 
 # EQUATION 29 BIRCH (BC-BIRCH--DNR RPT#24,1977)
 
@@ -1680,7 +1713,7 @@ def Eq_29(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[41]:
+# In[286]:
 
 # EQUATION 30 BIGLEAF MAPLE (BC-MAPLE--DNR RPT#24,1977)
 
@@ -1721,7 +1754,7 @@ def Eq_30(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[42]:
+# In[287]:
 
 # EQUATION 31 EUCALYPTUS (MEMO,COLIN D. MacLEAN 1/27/83,(REVISED 2/7/83) )
 
@@ -1761,7 +1794,7 @@ def Eq_31(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[43]:
+# In[288]:
 
 # EQUATION 32 G.CHINQUAPIN (PILLSBURY (H,D), CHARLES BOLSINGER 1/3/83)
 
@@ -1805,7 +1838,7 @@ def Eq_32(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[44]:
+# In[289]:
 
 # EQUATION 33 C.LAUREL (PILLSBURY (H,D), CHARLES BOLSINGER 1/3/83)
 
@@ -1849,7 +1882,7 @@ def Eq_33(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[45]:
+# In[290]:
 
 # EQUATION 34 TANOAK (PILLSBURY (H,D), CHARLES BOLSINGER 1/3/83)
 
@@ -1896,7 +1929,7 @@ def Eq_34(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[46]:
+# In[291]:
 
 # EQUATION 35 CALIF WHITE OAK (PILLSBURY (H,D), CHARLES BOLSINGER 1/3/83)
 
@@ -1940,7 +1973,7 @@ def Eq_35(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[47]:
+# In[292]:
 
 # EQUATION 36 ENGELMANN OAK (PILLSBURY (H,D), CHARLES BOLSINGER 1/3/83)
 
@@ -1984,7 +2017,7 @@ def Eq_36(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[48]:
+# In[293]:
 
 # EQUATION 37 BIGLEAF MAPLE (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
@@ -2072,7 +2105,7 @@ def Eq_37(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[49]:
+# In[294]:
 
 # EQUATION 38 CALIF BLACK OAK (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
@@ -2159,7 +2192,7 @@ def Eq_38(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[50]:
+# In[295]:
 
 # EQUATION 39 BLUE OAK (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
@@ -2238,7 +2271,7 @@ def Eq_39(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[51]:
+# In[296]:
 
 # EQUATION 40 PACIFIC MADRONE (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
@@ -2320,7 +2353,7 @@ def Eq_40(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[52]:
+# In[297]:
 
 # EQUATION 41 ORE WHITE OAK (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
@@ -2407,7 +2440,7 @@ def Eq_41(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[53]:
+# In[298]:
 
 # EQUATION 42 CANYON LIVE OAK (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
@@ -2486,7 +2519,7 @@ def Eq_42(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[54]:
+# In[299]:
 
 # EQUATION 43 COAST LIVE OAK (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
@@ -2567,7 +2600,7 @@ def Eq_43(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[55]:
+# In[300]:
 
 # EQUATION 44 INT LIVE OAK (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
@@ -2637,14 +2670,14 @@ def Eq_44(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[56]:
+# In[301]:
 
 # EQUATION 45 MTN. MAHOGANY (Chojnacky, 1985)
 
 # Chojnacky D.C., 1985.  Pinyon-Juniper Volume Equations for the Central Rocky Mountain States.
 # Res. Note INT-339, USDA, Forest Service, Intermountain Res. Station, Ogden, UT 84401.
 
-def Eq_45(DRC, HT, STEMS, metric):
+def Eq_45(DRC, HT, metric, STEMS=1):
     """
     WHERE:
     VOLUME = cubic foot volume from ground level to a 1.5-inch minimum branch diameter 
@@ -2655,14 +2688,16 @@ def Eq_45(DRC, HT, STEMS, metric):
     HT (feet) =  Total height of the tree
     """
     eq_number = 45
-    
+
     if DRC >=3 and HT >0:
         Factor = DRC * DRC * HT
+    else: # not originally in equations, but calculation will halt without a value for Factor
+        Factor = 1 # when DRC <3"
     
     if STEMS == 1:
-        VOLUME = (-0.13363 + (0.128222 * (Factor**(1/3))) + 0.080208)**3
+        VOLUME = (-0.13363 + (0.128222 * (Factor**(1./3.))) + 0.080208)**3
     elif STEMS > 1:
-        VOLUME = (-0.13363 + (0.128222 * (Factor**(1/3))))**3 
+        VOLUME = (-0.13363 + (0.128222 * (Factor**(1./3.))))**3 
 
     if VOLUME <= 0:
         VOLUME = 0.1
@@ -2687,14 +2722,14 @@ def Eq_45(DRC, HT, STEMS, metric):
             return 0 # no boardfoot volume according to CAR/ARB documentation
 
 
-# In[57]:
+# In[302]:
 
 # EQUATION 46 MESQUITE (Chojnacky, 1985)
 
 # Chojnacky D.C., 1985.  Pinyon-Juniper Volume Equations for the Central Rocky Mountain States.
 # Res. Note INT-339, USDA, Forest Service, Intermountain Res. Station, Ogden, UT 84401.
 
-def Eq_46(DRC, HT, STEMS, metric):
+def Eq_46(DRC, HT, metric, STEMS=1):
     """
     WHERE:
     VOLUME = cubic foot volume from ground level to a 1.5-inch minimum branch diameter 
@@ -2706,8 +2741,8 @@ def Eq_46(DRC, HT, STEMS, metric):
     """
     eq_number = 46
     
-    if DRC >= 3 and HT >0:
-        Factor = DRC * DRC * HT
+#     if DRC >= 3 and HT >0:
+#         Factor = DRC * DRC * HT   # Factor is not used in the equation, not clear why it's calculated here 
     
     if STEMS > 1:
         if DRC**2 * HT/1000 <= 2:
@@ -2744,7 +2779,7 @@ def Eq_46(DRC, HT, STEMS, metric):
             return 0 # no boardfoot volume according to CAR/ARB documentation
 
 
-# In[58]:
+# In[303]:
 
 # For calculating boardfoot volume of softwoods
 def SW_BFConversion(DBH, CV4, TARIF, metric):
@@ -2812,7 +2847,7 @@ def SW_BFConversion(DBH, CV4, TARIF, metric):
         return metric_dict[metric]
 
 
-# In[59]:
+# In[304]:
 
 # For calculating boardfoot volume of hardwoods
 def HW_BFConversion(CV4, CV8, DBH, eq_number, CVT, TARIF, HT, metric):
@@ -2888,62 +2923,44 @@ def HW_BFConversion(CV4, CV8, DBH, eq_number, CVT, TARIF, HT, metric):
         return metric_dict[metric]
 
 
-# In[74]:
+# In[309]:
 
-# Test Softwood equations
-def test_softwoods():
-    for eqn in [Eq_1, Eq_2, Eq_3, Eq_4, Eq_5, Eq_6, Eq_7, Eq_8, Eq_9, Eq_10, Eq_11, Eq_12, Eq_13]:
-        failed = False
-        print(str(eqn.__name__) + "..."),
-        for metric in ['CVTS', 'TARIF', 'CV4', 'CVT', 'RC6', 'CV6', 'CUBUS', 'B4', 'RS616L', 'RS616', 'RS632','SV616', 'SV632', 'RI6','XINT6', 'sawlog_cubic', 'total_cubic', 'boardfoot_16ft', 'boardfoot_32ft']:
-            try:
-                eqn(12,85, metric)
-            except:
-                failed = True
-                print("failed on " + str(metric))
-        if not failed:
-            print("passed.")
+def test_equations(equations='all', metrics=['CVTS']):
+    '''
+    Tests a range of diameters and heights for cubic volume including top and stump.
+    equations = a list of equations, or 'all' to test all equations.
+    metrics = a list of metrics to test
+    '''
+    from mpl_toolkits.mplot3d import axes3d
+    import matplotlib.pyplot as plt
+    
+    if equations == 'all':
+        test_eq = [Eq_1, Eq_2, Eq_3, Eq_4, Eq_5, Eq_6, Eq_7, Eq_8, Eq_9, Eq_10, Eq_11, Eq_12, Eq_13,
+                Eq_14, Eq_141, Eq_142, Eq_15, Eq_16, Eq_17, Eq_18, Eq_19, Eq_20, Eq_21, Eq_22, Eq_23, 
+                Eq_24, Eq_25, Eq_26, Eq_27, Eq_28, Eq_29, Eq_30, Eq_31, Eq_32, Eq_33, Eq_34, Eq_35, 
+                Eq_36, Eq_37, Eq_38, Eq_39, Eq_40, Eq_41, Eq_42, Eq_43, Eq_44, Eq_45, Eq_46]
+    else: test_eq = equations
+    
+    for metric in metrics:
+        for eqn in test_eq:
+            x = [] # DBH
+            y = [] # HT
+            z = [] # cubic volume
+            for DBH in range(0,100,1):
+                for HT in range (0, 400, 10):
+                    x.append(DBH)
+                    y.append(HT)
+                    z.append(calc_vol(DBH,HT,metric,eqn))
 
-    for eqn in [Eq_14, Eq_141]:
-        failed = False
-        print(str(eqn.__name__) + "..."),
-        for metric in ['CVTS', 'TARIF', 'CV4', 'CVT', 'RC6', 'CV6', 'CUBUS', 'B4', 'RS616L', 'RS616', 'RS632','SV616', 'SV632', 'RI6','XINT6', 'sawlog_cubic', 'total_cubic', 'boardfoot_16ft', 'boardfoot_32ft']:
-            try:
-                eqn(12,85,1,metric)
-            except:
-                failed = True
-                print("failed on " + str(metric))
-        if not failed:
-            print("passed.")
-
-    for eqn in [Eq_142, Eq_15, Eq_16, Eq_17, Eq_18, Eq_19, Eq_20, Eq_21, Eq_22, Eq_23, Eq_24]:
-        print(str(eqn.__name__) + "..."),
-        for metric in ['CVTS', 'TARIF', 'CV4', 'CVT', 'RC6', 'CV6', 'CUBUS', 'B4', 'RS616L', 'RS616', 'RS632','SV616', 'SV632', 'RI6','XINT6', 'sawlog_cubic', 'total_cubic', 'boardfoot_16ft', 'boardfoot_32ft']:
-            try:
-                eqn(12,85, metric)
-            except:
-                failed = True
-                print("failed on " + str(metric))
-                pass
-        if not failed:
-            print("passed.")
-
-
-# In[82]:
-
-# # Test Hardwood equations
-
-def test_hardwoods():
-    for eqn in [Eq_25, Eq_26, Eq_27, Eq_28, Eq_29, Eq_30, Eq_31, Eq_32, Eq_33, Eq_34, Eq_35, Eq_36, Eq_37, Eq_38, Eq_39, Eq_40, Eq_41, Eq_42, Eq_43, Eq_44, Eq_45, Eq_46]:
-        failed = False
-        print(str(eqn.__name__) + "..."),
-        for metric in ['CVTS', 'TARIF', 'CV4', 'CVT', 'CV8', 'RC6', 'CV6', 'CV8', 'TARIFX', 'CV4X', 'CUBUS', 'B4', 'RS616L', 'RS616', 'SV616', 'RI6','XINT6',
-                            'RS816', 'SV816', 'RI8', 'XINT8', 'total_cubic', 'sawlog_cubic', 'boardfoot_16ft']:
-            try:
-                eqn(12,85, metric)
-            except:
-                failed = True
-                print("failed on " + str(metric))
-        if not failed:
-            print("passed.")
+            fig = plt.figure()
+            ax = fig.gca(projection='3d')
+            ax.scatter(x,y,z)
+            ax.set_xlabel('DBH (in)')
+            ax.set_ylabel('HT (ft)')
+            ax.set_zlabel('Cubic volume (ft3)')
+            ax.set_title(eqn.func_name)
+            ax.set_xlim(0, 100)
+            ax.set_ylim(0, 400)
+            ax.set_zlim(zmin=0)
+            plt.show()
 
