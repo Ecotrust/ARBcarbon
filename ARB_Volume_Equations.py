@@ -1,13 +1,13 @@
 
 # coding: utf-8
 
-# In[247]:
+# In[2]:
 
 # Tree equations required by the California Air Resources Board (ARB)
 # Used to calculate tree volume for projects located in California, Oregon, or Washington
 
 
-# In[248]:
+# In[3]:
 
 # These equations were translated from the PDF available on the ARB website: 
 # http://www.arb.ca.gov/cc/capandtrade/protocols/usforest/usforestprojects_2015.htm
@@ -15,19 +15,19 @@
 # http://www.arb.ca.gov/cc/capandtrade/protocols/usforest/2015/volume.equations.ca.or.wa.pdf
 
 
-# In[249]:
+# In[4]:
 
 import math
 
 
-# In[250]:
+# In[5]:
 
 # ARB-APPROVED VOLUME EQUATIONS ARE REPRODUCED BELOW AS FUNCTIONS
 # Each volume equation is a function that calculates a variety of variables.
 # These variables are materialized as a dictionary within the local volume equation/function environment.
 
 
-# In[251]:
+# In[6]:
 
 # This helper function is called within individual tree volume equations to return the volume or  
 # equation parameter requested by the user.
@@ -52,7 +52,7 @@ def get_metric(metric_dict, metric, wood_type):
                                        metric_dict['CVT'], metric_dict['TARIF'], metric_dict['HT'], metric)
 
 
-# In[252]:
+# In[7]:
 
 def calc_vol(DBH, HT, volume_metric, volume_equation):
     '''
@@ -86,19 +86,19 @@ def calc_vol(DBH, HT, volume_metric, volume_equation):
     return volume_equation(DBH, HT, volume_metric)
 
 
-# In[253]:
+# In[8]:
 
 # THE VOLUME EQUATIONS
 
 
-# In[254]:
+# In[9]:
 
 # For species where there is no identified volume equation by ARB/CAR
 def Eq_None(DBH, HT, metric):
     return 0
 
 
-# In[255]:
+# In[10]:
 
 # Equation 1 Douglas-Fir (WEYERHAUSER-DNR RPT#24,1977)
 
@@ -138,7 +138,7 @@ def Eq_1(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[256]:
+# In[11]:
 
 # Equation 2 Douglas-Fir (DNR MEMO--SUMMERFIELD, 11/7/80)
 
@@ -175,7 +175,7 @@ def Eq_2(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[257]:
+# In[12]:
 
 # Equation 3 Douglas-Fir (USDA-FS RES NOTE PNW-266)
 
@@ -233,8 +233,8 @@ def Eq_3(DBH, HT, metric):
             TARIF=0.01
         CVTS = (CV4 * TERM )/ (BA - 0.087266)
 
-        # set floor of CVTS to zero (in case equation generates negative values)
-        CVTS = max(0,CVTS)
+#         # set floor of CVTS to zero (in case equation generates negative values)
+#         CVTS = max(0,CVTS)
 
         CVT = TARIF * (0.9679 - 0.1051 * 0.5523**(DBH-1.5) ) * TERM / 0.912733
     
@@ -249,8 +249,8 @@ def Eq_3(DBH, HT, metric):
             TARIF = 0.01
         CVTS = TARIF * TERM
 
-        # set floor of CVTS to zero (in case equation generates negative values)
-        CVTS = max(0,CVTS)
+#         # set floor of CVTS to zero (in case equation generates negative values)
+#         CVTS = max(0,CVTS)
 
         CVT = TARIF * (0.9679 - 0.1051 * 0.5523**(DBH-1.5) ) * TERM / 0.912733
         CV4 = CF4 * BA * HT #(calculated with actual DBH and BA)
@@ -269,7 +269,7 @@ def Eq_3(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[258]:
+# In[13]:
 
 # Equation 4 Ponderosa pine (DNR MEMO--SUMMERFIELD,11/7/80)
 
@@ -307,7 +307,7 @@ def Eq_4(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[259]:
+# In[14]:
 
 # Equation 5 Ponderosa pine (USDA-FS RES NOTE PNW-266)
 
@@ -364,8 +364,8 @@ def Eq_5(DBH, HT, metric):
             TARIF=0.01
         CVTS = (CV4 * TERM )/ (BA - 0.087266)
         
-        # set floor of CVTS to zero (in case equation generates negative values)
-        CVTS = max(0,CVTS)
+#         # set floor of CVTS to zero (in case equation generates negative values)
+#         CVTS = max(0,CVTS)
 
         CVT = TARIF * (0.9679 - 0.1051 * 0.5523**(DBH-1.5) ) * TERM / 0.912733
         
@@ -380,8 +380,8 @@ def Eq_5(DBH, HT, metric):
             TARIF = 0.01
         CVTS = TARIF * TERM
         
-        # set floor of CVTS to zero (in case equation generates negative values)
-        CVTS = max(0,CVTS)
+#         # set floor of CVTS to zero (in case equation generates negative values)
+#         CVTS = max(0,CVTS)
 
         CVT = TARIF * (0.9679 - 0.1051 * 0.5523**(DBH-1.5) ) * TERM / 0.912733
         CV4 = CF4 * BA * HT #(calculated with actual DBH and BA)
@@ -400,7 +400,7 @@ def Eq_5(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[260]:
+# In[15]:
 
 # Equation 6 Western hemlock (DNR NOTE 27,4/79)
 
@@ -437,7 +437,7 @@ def Eq_6(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[261]:
+# In[16]:
 
 # Equation 7 Western hemlock (BROWN (1962) BC FOREST SERV,P33)
 
@@ -474,7 +474,7 @@ def Eq_7(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[262]:
+# In[17]:
 
 # Equation 8 Redcedar (REDCEDAR INTERIOR--DNR RPT#24,1977)
 
@@ -514,7 +514,7 @@ def Eq_8(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[263]:
+# In[18]:
 
 # Equation 9 Redcedar (REDCEDAR COAST--DNR RPT#24,1977)
 
@@ -554,7 +554,7 @@ def Eq_9(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[264]:
+# In[19]:
 
 # Equation 10 True Firs (INTERIOR BALSAM--DNR RPT#24,1977)
 
@@ -594,7 +594,7 @@ def Eq_10(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[265]:
+# In[20]:
 
 # Equation 11 True Firs (COAST BALSAM--DNR RPT#24,1977)
 
@@ -634,7 +634,7 @@ def Eq_11(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[266]:
+# In[21]:
 
 # Equation 12 Spruce (SITKA SPRUCE INTERIOR--DNR RPT#24,1977)
 
@@ -674,7 +674,7 @@ def Eq_12(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[267]:
+# In[22]:
 
 # EQUATION 13 SPRUCE (SITKA SPRUCE MATURE--DNR RPT#24,1977)
 
@@ -714,7 +714,7 @@ def Eq_13(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[268]:
+# In[23]:
 
 # EQUATION 14 - OTHER JUNIPERS (CHOJNACKY, 1985)
 
@@ -762,7 +762,7 @@ def Eq_14(DRC, HT, metric, STEMS=1):
             return 0 # no boardfoot volume according to CAR/ARB documentation
 
 
-# In[269]:
+# In[24]:
 
 # EQUATION 14.1 - SINGLELEAF PINYON (CHOJNACKY, 1985)
 
@@ -809,7 +809,7 @@ def Eq_141(DRC, HT, metric, STEMS=1):
             return 0 # no boardfoot volume according to CAR/ARB documentation
 
 
-# In[270]:
+# In[25]:
 
 # EQUATION 14.2 - ROCKY MOUNTAIN JUNIPER (CHOJNACKY, 1985)
 
@@ -851,7 +851,7 @@ def Eq_142(DRC, HT, metric):
             return 0 # no boardfoot volume according to CAR/ARB documentation
 
 
-# In[271]:
+# In[26]:
 
 # EQUATION 15 LODGEPOLE PINE (LODGEPOLE PINE--DNR RPT#24,1977)
 
@@ -891,7 +891,7 @@ def Eq_15(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[272]:
+# In[27]:
 
 # EQUATION 16 LODGEPOLE PINE (USDA-FS RES NOTE PNW-266)
 
@@ -948,8 +948,8 @@ def Eq_16(DBH, HT, metric):
             TARIF=0.01
         CVTS = (CV4 * TERM )/ (BA - 0.087266)
         
-        # set floor of CVTS to zero (in case equation generates negative values)
-        CVTS = max(0,CVTS)
+#         # set floor of CVTS to zero (in case equation generates negative values)
+#         CVTS = max(0,CVTS)
 
         CVT = TARIF * (0.9679 - 0.1051 * 0.5523**(DBH-1.5) ) * TERM / 0.912733
     
@@ -964,8 +964,8 @@ def Eq_16(DBH, HT, metric):
             TARIF = 0.01
         CVTS = TARIF * TERM
 
-        # set floor of CVTS to zero (in case equation generates negative values)
-        CVTS = max(0,CVTS)
+#         # set floor of CVTS to zero (in case equation generates negative values)
+#         CVTS = max(0,CVTS)
         
         CVT = TARIF * (0.9679 - 0.1051 * 0.5523**(DBH-1.5) ) * TERM / 0.912733
         CV4 = CF4 * BA * HT #(calculated with actual DBH and BA)
@@ -984,7 +984,7 @@ def Eq_16(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[273]:
+# In[28]:
 
 # EQUATION 17 MTN.HEMLOCK (BELL, OSU RES.BULL 35)
 
@@ -1019,7 +1019,7 @@ def Eq_17(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[274]:
+# In[29]:
 
 # EQUATION 18 SHASTA RED FIR (USDA-FS RES NOTE PNW-266)
 
@@ -1076,8 +1076,8 @@ def Eq_18(DBH, HT, metric):
             TARIF=0.01
         CVTS = (CV4 * TERM )/ (BA - 0.087266)
 
-        # set floor of CVTS to zero (in case equation generates negative values)
-        CVTS = max(0,CVTS)
+#         # set floor of CVTS to zero (in case equation generates negative values)
+#         CVTS = max(0,CVTS)
 
         CVT = TARIF * (0.9679 - 0.1051 * 0.5523**(DBH-1.5) ) * TERM / 0.912733
     
@@ -1092,8 +1092,8 @@ def Eq_18(DBH, HT, metric):
             TARIF = 0.01
         CVTS = TARIF * TERM
 
-        # set floor of CVTS to zero (in case equation generates negative values)
-        CVTS = max(0,CVTS)
+#         # set floor of CVTS to zero (in case equation generates negative values)
+#         CVTS = max(0,CVTS)
 
         CVT = TARIF * (0.9679 - 0.1051 * 0.5523**(DBH-1.5) ) * TERM / 0.912733
         CV4 = CF4 * BA * HT #(calculated with actual DBH and BA)
@@ -1112,7 +1112,7 @@ def Eq_18(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[275]:
+# In[30]:
 
 # EQUATION 19 INCENSE CEDAR (USDA-FS RES NOTE PNW-266)
 
@@ -1169,8 +1169,8 @@ def Eq_19(DBH, HT, metric):
             TARIF=0.01
         CVTS = (CV4 * TERM )/ (BA - 0.087266)
 
-        # set floor of CVTS to zero (in case equation generates negative values)
-        CVTS = max(0,CVTS)
+#         # set floor of CVTS to zero (in case equation generates negative values)
+#         CVTS = max(0,CVTS)
 
         CVT = TARIF * (0.9679 - 0.1051 * 0.5523**(DBH-1.5) ) * TERM / 0.912733
     
@@ -1185,8 +1185,8 @@ def Eq_19(DBH, HT, metric):
             TARIF = 0.01
         CVTS = TARIF * TERM
 
-        # set floor of CVTS to zero (in case equation generates negative values)
-        CVTS = max(0,CVTS)
+#         # set floor of CVTS to zero (in case equation generates negative values)
+#         CVTS = max(0,CVTS)
 
         CVT = TARIF * (0.9679 - 0.1051 * 0.5523**(DBH-1.5) ) * TERM / 0.912733
         CV4 = CF4 * BA * HT #(calculated with actual DBH and BA)
@@ -1205,7 +1205,7 @@ def Eq_19(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[276]:
+# In[31]:
 
 # EQUATION 20 SUGAR PINE (USDA-FS RES NOTE PNW-266)
 
@@ -1262,8 +1262,8 @@ def Eq_20(DBH, HT, metric):
             TARIF=0.01
         CVTS = (CV4 * TERM )/ (BA - 0.087266)
 
-        # set floor of CVTS to zero (in case equation generates negative values)
-        CVTS = max(0,CVTS)
+#         # set floor of CVTS to zero (in case equation generates negative values)
+#         CVTS = max(0,CVTS)
 
         CVT = TARIF * (0.9679 - 0.1051 * 0.5523**(DBH-1.5) ) * TERM / 0.912733
     
@@ -1278,8 +1278,8 @@ def Eq_20(DBH, HT, metric):
             TARIF = 0.01
         CVTS = TARIF * TERM
 
-        # set floor of CVTS to zero (in case equation generates negative values)
-        CVTS = max(0,CVTS)
+#         # set floor of CVTS to zero (in case equation generates negative values)
+#         CVTS = max(0,CVTS)
     
         CVT = TARIF * (0.9679 - 0.1051 * 0.5523**(DBH-1.5) ) * TERM / 0.912733
         CV4 = CF4 * BA * HT #(calculated with actual DBH and BA)
@@ -1298,7 +1298,7 @@ def Eq_20(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[277]:
+# In[32]:
 
 # EQUATION 21 W.JUNIPER (CHITTESTER,1984)
 
@@ -1338,7 +1338,7 @@ def Eq_21(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[278]:
+# In[33]:
 
 # EQUATION 22 W.LARCH (LARCH--DNR RPT#24,1977)
 def Eq_22(DBH, HT, metric):
@@ -1371,7 +1371,7 @@ def Eq_22(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[279]:
+# In[34]:
 
 # EQUATION 23 WHITE FIR (USDA-FS RES NOTE PNW-266)
 
@@ -1428,8 +1428,8 @@ def Eq_23(DBH, HT, metric):
             TARIF=0.01
         CVTS = (CV4 * TERM )/ (BA - 0.087266)
 
-        # set floor of CVTS to zero (in case equation generates negative values)
-        CVTS = max(0,CVTS)
+#         # set floor of CVTS to zero (in case equation generates negative values)
+#         CVTS = max(0,CVTS)
 
         CVT = TARIF * (0.9679 - 0.1051 * 0.5523**(DBH-1.5) ) * TERM / 0.912733
     
@@ -1444,8 +1444,8 @@ def Eq_23(DBH, HT, metric):
             TARIF = 0.01
         CVTS = TARIF * TERM
 
-        # set floor of CVTS to zero (in case equation generates negative values)
-        CVTS = max(0,CVTS)
+#         # set floor of CVTS to zero (in case equation generates negative values)
+#         CVTS = max(0,CVTS)
 
         CVT = TARIF * (0.9679 - 0.1051 * 0.5523**(DBH-1.5) ) * TERM / 0.912733
         CV4 = CF4 * BA * HT #(calculated with actual DBH and BA)
@@ -1464,7 +1464,7 @@ def Eq_23(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[280]:
+# In[35]:
 
 # EQUATION 24 REDWOOD (Krumland, B.E. and L.E. Wensel. 1975. And DNR RPT#24,1977)
 
@@ -1500,7 +1500,7 @@ def Eq_24(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'SW')
 
 
-# In[281]:
+# In[36]:
 
 # EQUATION 25 ALDER (CURTIS/BRUCE, PNW-56)
 
@@ -1525,12 +1525,14 @@ def Eq_25(DBH, HT, metric):
         HT = 18
     
     BA = 0.005454154 * DBH**2
+    
     Z = (HT - 0.5 - DBH/24.0)/(HT - 4.5)
-    F = 0.3651*Z**2.5 - 7.9032*(Z**2.5)*DBH/1000.0 + 3.295*(Z**2.5)*HT/1000.0 - 1.9856*(Z**2.5)*HT*DBH/100000.0 +         -2.9668*(Z**2.5)*(HT**2)/1000000.0 + 1.5092*(Z**2.5)*(HT**0.5)/1000.0 + 4.9395*(Z**4)*DBH/1000.0 +         -2.05937*(Z**4)*HT/1000.0 + 1.5042*(Z**33)*HT*DBH/1000000.0 - 1.1433*(Z**33)*(HT**0.5)/10000.0 + 1.809*(Z**41)*(HT**2)/10000000.0
+    
+    F = 0.3651*Z**2.5 - 7.9032*(Z**2.5)*DBH/1000.0 + 3.295*(Z**2.5)*HT/1000.0 - 1.9856*(Z**2.5)*HT*DBH/100000.0 +         -2.9668*(Z**2.5)*(HT**2)/1000000.0 + 1.5092*(Z**2.5)*(HT**0.5)/1000.0 + 4.9395*(Z**4.0)*DBH/1000.0 +         -2.05937*(Z**4.0)*HT/1000.0 + 1.5042*(Z**33.0)*HT*DBH/1000000.0 - 1.1433*(Z**33.0)*(HT**0.5)/10000.0 +         1.809*(Z**41.0)*(HT**2)/10000000.0
     
     CVT = 0.00545415 * DBH**2 * (HT-4.5)*F
-    TARIF = (CVT * 0.912733)/((0.9679 - 1.051 * 0.5523**(DBH-1.5))*(1.033 * (1.0 + 1.382937 * math.exp(-4.015292 * DBH))) * (BA + 0.087266) - 0.174533)
-    CVTS = TARIF * ((1.0330*(1.0 + 1.382937 * math.exp(-4.015292*(DBH/10.0))))*(BA*0.087266)-0.174533)/0.912733
+    TARIF = (CVT * 0.912733)/((0.9679 - 0.1051 * 0.5523**(DBH-1.5))*((1.033 * (1.0 + 1.382937 * math.exp(-4.015292 * (DBH/10.0)))) * (BA + 0.087266) - 0.174533))
+    CVTS = TARIF * ((1.0330*(1.0 + 1.382937 * math.exp(-4.015292*(DBH/10.0))))*(BA + 0.087266) - 0.174533)/0.912733
     
     # set floor of CVTS to zero (in case equation generates negative values)
     CVTS = max(0,CVTS)
@@ -1549,7 +1551,7 @@ def Eq_25(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[282]:
+# In[37]:
 
 # EQUATION 26 ALDER (BC-ALDER--DNR RPT#24,1977)
 
@@ -1590,7 +1592,7 @@ def Eq_26(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[283]:
+# In[38]:
 
 # EQUATION 27 COTTONWOOD (BC-COTTONWOOD--DNR RPT#24,1977)
 
@@ -1631,7 +1633,7 @@ def Eq_27(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[284]:
+# In[39]:
 
 # EQUATION 28 ASPEN (BC-ASPEN--DNR RPT#24,1977)
 
@@ -1672,7 +1674,7 @@ def Eq_28(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[285]:
+# In[40]:
 
 # EQUATION 29 BIRCH (BC-BIRCH--DNR RPT#24,1977)
 
@@ -1713,7 +1715,7 @@ def Eq_29(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[286]:
+# In[41]:
 
 # EQUATION 30 BIGLEAF MAPLE (BC-MAPLE--DNR RPT#24,1977)
 
@@ -1754,7 +1756,7 @@ def Eq_30(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[287]:
+# In[42]:
 
 # EQUATION 31 EUCALYPTUS (MEMO,COLIN D. MacLEAN 1/27/83,(REVISED 2/7/83) )
 
@@ -1794,7 +1796,7 @@ def Eq_31(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[288]:
+# In[43]:
 
 # EQUATION 32 G.CHINQUAPIN (PILLSBURY (H,D), CHARLES BOLSINGER 1/3/83)
 
@@ -1838,7 +1840,7 @@ def Eq_32(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[289]:
+# In[44]:
 
 # EQUATION 33 C.LAUREL (PILLSBURY (H,D), CHARLES BOLSINGER 1/3/83)
 
@@ -1882,7 +1884,7 @@ def Eq_33(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[290]:
+# In[45]:
 
 # EQUATION 34 TANOAK (PILLSBURY (H,D), CHARLES BOLSINGER 1/3/83)
 
@@ -1929,7 +1931,7 @@ def Eq_34(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[291]:
+# In[46]:
 
 # EQUATION 35 CALIF WHITE OAK (PILLSBURY (H,D), CHARLES BOLSINGER 1/3/83)
 
@@ -1973,7 +1975,7 @@ def Eq_35(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[292]:
+# In[47]:
 
 # EQUATION 36 ENGELMANN OAK (PILLSBURY (H,D), CHARLES BOLSINGER 1/3/83)
 
@@ -2017,7 +2019,7 @@ def Eq_36(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[293]:
+# In[48]:
 
 # EQUATION 37 BIGLEAF MAPLE (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
@@ -2105,7 +2107,7 @@ def Eq_37(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[294]:
+# In[49]:
 
 # EQUATION 38 CALIF BLACK OAK (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
@@ -2192,7 +2194,7 @@ def Eq_38(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[295]:
+# In[50]:
 
 # EQUATION 39 BLUE OAK (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
@@ -2271,7 +2273,7 @@ def Eq_39(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[296]:
+# In[51]:
 
 # EQUATION 40 PACIFIC MADRONE (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
@@ -2353,7 +2355,7 @@ def Eq_40(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[297]:
+# In[52]:
 
 # EQUATION 41 ORE WHITE OAK (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
@@ -2440,7 +2442,7 @@ def Eq_41(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[298]:
+# In[53]:
 
 # EQUATION 42 CANYON LIVE OAK (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
@@ -2519,7 +2521,7 @@ def Eq_42(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[299]:
+# In[54]:
 
 # EQUATION 43 COAST LIVE OAK (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
@@ -2600,7 +2602,7 @@ def Eq_43(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[300]:
+# In[55]:
 
 # EQUATION 44 INT LIVE OAK (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
@@ -2670,7 +2672,7 @@ def Eq_44(DBH, HT, metric):
     return get_metric(metric_dict, metric, 'HW')
 
 
-# In[301]:
+# In[56]:
 
 # EQUATION 45 MTN. MAHOGANY (Chojnacky, 1985)
 
@@ -2722,7 +2724,7 @@ def Eq_45(DRC, HT, metric, STEMS=1):
             return 0 # no boardfoot volume according to CAR/ARB documentation
 
 
-# In[302]:
+# In[57]:
 
 # EQUATION 46 MESQUITE (Chojnacky, 1985)
 
@@ -2779,7 +2781,7 @@ def Eq_46(DRC, HT, metric, STEMS=1):
             return 0 # no boardfoot volume according to CAR/ARB documentation
 
 
-# In[303]:
+# In[58]:
 
 # For calculating boardfoot volume of softwoods
 def SW_BFConversion(DBH, CV4, TARIF, metric):
@@ -2847,7 +2849,7 @@ def SW_BFConversion(DBH, CV4, TARIF, metric):
         return metric_dict[metric]
 
 
-# In[304]:
+# In[59]:
 
 # For calculating boardfoot volume of hardwoods
 def HW_BFConversion(CV4, CV8, DBH, eq_number, CVT, TARIF, HT, metric):
@@ -2923,9 +2925,9 @@ def HW_BFConversion(CV4, CV8, DBH, eq_number, CVT, TARIF, HT, metric):
         return metric_dict[metric]
 
 
-# In[309]:
+# In[60]:
 
-def test_equations(equations='all', metrics=['CVTS']):
+def graph_equations(equations='all', metrics=['CVTS']):
     '''
     Tests a range of diameters and heights for cubic volume including top and stump.
     equations = a list of equations, or 'all' to test all equations.
@@ -2963,4 +2965,36 @@ def test_equations(equations='all', metrics=['CVTS']):
             ax.set_ylim(0, 400)
             ax.set_zlim(zmin=0)
             plt.show()
+
+
+# In[69]:
+
+def test_negatives(equations='all', metrics=['CVTS']):
+    '''
+    Tests a range of diameters and heights for cubic volume including top and stump.
+    equations = a list of equations, or 'all' to test all equations.
+    metrics = a list of metrics to test
+    '''
+    if equations == 'all':
+        test_eq = [Eq_1, Eq_2, Eq_3, Eq_4, Eq_5, Eq_6, Eq_7, Eq_8, Eq_9, Eq_10, Eq_11, Eq_12, Eq_13,
+                Eq_14, Eq_141, Eq_142, Eq_15, Eq_16, Eq_17, Eq_18, Eq_19, Eq_20, Eq_21, Eq_22, Eq_23, 
+                Eq_24, Eq_25, Eq_26, Eq_27, Eq_28, Eq_29, Eq_30, Eq_31, Eq_32, Eq_33, Eq_34, Eq_35, 
+                Eq_36, Eq_37, Eq_38, Eq_39, Eq_40, Eq_41, Eq_42, Eq_43, Eq_44, Eq_45, Eq_46]
+    else: test_eq = equations
+    
+    negatives = []
+    neg_eqs = []
+    
+    for metric in metrics:
+        for eqn in test_eq:
+            for DBH in range(0,100,1):
+                for HT in range (0, 400, 10):
+                    if calc_vol(DBH,HT,metric,eqn) <0:
+                        if eqn.func_name not in neg_eqs:
+                            neg_eqs.append(eqn.func_name)
+                        negatives.append([DBH, HT, calc_vol(DBH,HT,metric,eqn)])
+    
+    if len(negatives) > 0:
+        print "These equations created negatives."
+        print negatives
 
