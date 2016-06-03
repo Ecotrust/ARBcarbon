@@ -25,7 +25,7 @@ Options:
 """
 
 
-# In[17]:
+# In[2]:
 
 import os
 from docopt import docopt
@@ -67,15 +67,18 @@ stand_list = FPS_ADMIN[['STD_ID', 'RPT_YR', 'MSMT_YR', 'Property', 'AREA_GIS']]
 # tree_list, a dataframe of all the trees in the DBHCLS table
 tree_list = FPS_DBHCLS[['RPT_YR', 'STD_ID', 'PlotTree', 'GRP', 'SPECIES', 'TREES', 'DBH', 'HEIGHT']]
 
+# add Property Name and GIS_Area to tree_list
+tree_list = tree_list.merge(stand_list[['STD_ID', 'AREA_GIS', 'Property']], on='STD_ID')
 
-# In[6]:
+
+# In[5]:
 
 # report_yr = None
 # properties_to_run = None
 # region = None
 
 
-# In[7]:
+# In[6]:
 
 # Prompt user to specify a single property
 all_properties = pd.unique(stand_list['Property']).tolist()
@@ -97,7 +100,7 @@ if not properties_to_run:
             print 'Property not recognized. Try again.\n'
 
 
-# In[8]:
+# In[7]:
 
 # Prompt user to specify a region
 if not region:
@@ -110,7 +113,7 @@ if not region:
             print 'Region not recognized. Try again.\n'
 
 
-# In[9]:
+# In[8]:
 
 # Prompt user to specify a single report year
 all_years = sorted(pd.unique(tree_list['RPT_YR']).tolist())
@@ -130,7 +133,7 @@ if not report_yr:
             print ', '.join(str(yr) for yr in all_years) + '\n'
 
 
-# In[10]:
+# In[9]:
 
 # check if all species are recognized from user's crosswalk table
 DBHCLS_spp = pd.unique(FPS_DBHCLS.SPECIES) # the species found in the FPS Database
@@ -145,7 +148,7 @@ else:
     print "All species will have carbon calculations.\n"
 
 
-# In[11]:
+# In[10]:
 
 # hold out RPT_YR years that were not requested by user
 tree_list = tree_list.loc[tree_list['RPT_YR'].isin(report_yr)] # only include trees from that year
@@ -156,8 +159,8 @@ tree_list = tree_list.loc[tree_list['STD_ID'].isin(stands_in_properties_to_run)]
         
 # hold out any trees that were not in species crosswalk spreadsheet
 if len(missing_spp) >0:
-    tree_list = tree_list.loc[~tree_list['SPECIES'].isin(missing_spp)]
     missing_trees = tree_list.loc[tree_list['SPECIES'].isin(missing_spp)]
+    tree_list = tree_list.loc[~tree_list['SPECIES'].isin(missing_spp)]
     
 # hold out any trees that are not living, based on a GRP code 
 live_trees = ['..', '.R', '.I', '.L', '.W'] # codes for live, residual, ingrowth, leave, and wildlife trees
@@ -165,7 +168,7 @@ dead_trees = tree_list.loc[~tree_list['GRP'].isin(live_trees)] # trees with code
 tree_list = tree_list.loc[tree_list['GRP'].isin(live_trees)] # trees only with recognized live_trees codes
 
 
-# In[12]:
+# In[13]:
 
 # add new columns to the tree_list for individual trees:
 
@@ -216,18 +219,16 @@ tree_list['LiveTree_carbon_tCO2_tree'] = tree_list['LiveTree_biomass_kg'] / 1000
 tree_list['LiveTree_carbon_tCO2_ac'] = tree_list['LiveTree_carbon_tCO2_tree'] * tree_list['TREES']
 
 # Total carbon across property
-# add GIS_Area to tree_list
-tree_list = tree_list.merge(stand_list[['STD_ID', 'AREA_GIS', 'Property']], on='STD_ID')
 tree_list['LiveTree_carbon_tCO2_total'] = tree_list['LiveTree_carbon_tCO2_ac'] * tree_list['AREA_GIS']
 
 
-# In[15]:
+# In[14]:
 
 # add back in unrecognized species and dead_trees
 tree_list = tree_list.append([missing_trees, dead_trees], ignore_index=True)
 
 
-# In[16]:
+# In[ ]:
 
 # sort the tree_list
 tree_list = tree_list.sort_values(by = ['Property', 'RPT_YR', 'STD_ID', 'PlotTree'])
