@@ -4,5 +4,5 @@
 .ipynb_checkpoints/ARB_Biomass_Equations-checkpoint.ipynb
 Fund_1_YE15_Final.mdb
 *.pyc
-ADMIN.csv
 *.csv
+California/*
