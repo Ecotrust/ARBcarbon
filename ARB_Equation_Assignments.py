@@ -1,14 +1,14 @@
 
 # coding: utf-8
 
-# In[3]:
+# In[1]:
 
 from ARB_Volume_Equations import *
 from ARB_Biomass_Equations import *
 import pandas as pd
 
 
-# In[4]:
+# In[2]:
 
 # The volume equations were translated from the PDF availabe on the ARB website: 
 # http://www.arb.ca.gov/cc/capandtrade/protocols/usforest/usforestprojects_2015.htm
@@ -16,7 +16,7 @@ import pandas as pd
 # http://www.arb.ca.gov/cc/capandtrade/protocols/usforest/2015/volume.equations.ca.or.wa.pdf
 
 
-# In[5]:
+# In[3]:
 
 def check_for_None(equation_number):
     eqn = str(equation_number)
@@ -28,7 +28,7 @@ def check_for_None(equation_number):
         return eqn    
 
 
-# In[6]:
+# In[4]:
 
 # Create a class that holds the equations and related attributes to be used for each species.
 class Species:
@@ -78,7 +78,7 @@ class Species:
         self.CA_BLB = eval("BLB_"+str(check_for_None(CA)))
 
 
-# In[7]:
+# In[5]:
 
 # read in the species codes provided by the user
 # includes the user's code, the FIA code, and the common_name
@@ -86,7 +86,7 @@ species_crosswalk = pd.read_excel("Your_species_codes.xlsx", "Crosswalk")
 species_used = species_crosswalk.dropna() # ignore species the user didn't provide in the crosswalk table
 
 
-# In[8]:
+# In[6]:
 
 # read in the tables that describe which equations and wood parameters are required by ARB
 with pd.ExcelFile('ARB_Volume_and_Biomass_Tables.xlsx') as xlsx:
@@ -114,7 +114,7 @@ with pd.ExcelFile('ARB_Volume_and_Biomass_Tables.xlsx') as xlsx:
 ARB_species_attributes = pd.merge(VOL_Wood, BB_BLB, left_index = True, right_index = True) 
 
 
-# In[9]:
+# In[7]:
 
 # create a dictionary that will hold all species provide by the user
 # the key to the dict is the species code provided by the user, the value is the Species class
@@ -158,7 +158,7 @@ for index, row in species_used.iterrows():
     species_classes[row.Your_species_code].add_branch(WOR_BLB, WWA_BLB, EOR_BLB, EWA_BLB, CA_BLB) # add them to the class in the dictionary
 
 
-# In[10]:
+# In[11]:
 
 def confirm_assignments():
     '''
@@ -167,7 +167,10 @@ def confirm_assignments():
     '''
     def replace_func_with_name(x):
         if callable(x):
-            name = x.func_name.split('_')[1]
+            try:
+                name = x.func_name.split('_')[1]
+            except AttributeError: # volume equations are classes, not functions, don't have func_name attribute
+                name = x.__name__.split('_')[1]
             if name == 'None':
                 return '--'
             else:
