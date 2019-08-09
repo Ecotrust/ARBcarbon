@@ -1,15 +1,10 @@
-
-# coding: utf-8
-
-# In[1]:
-
 """
 FPS2ARB.
 FPS-to-ARB Carbon Calculation.
-Takes two CSV files in current working directory that were exported from FPS 
-(Forest Planning and Projection System) database containing forest inventory 
-data, calculates carbon storage for each tree, and documents the calculation 
-parameters and writes outputs to a new CSV file, one for each property 
+Takes two CSV files in current working directory that were exported from FPS
+(Forest Planning and Projection System) database containing forest inventory
+data, calculates carbon storage for each tree, and documents the calculation
+parameters and writes outputs to a new CSV file, one for each property
 detected in the FPS_ADMIN table/CSV.
 
 Usage:
@@ -25,9 +20,6 @@ Options:
     --region <region>  Region for equations (WOR, EOR, WWA, EWA, CA)
 """
 
-
-# In[2]:
-
 import os
 from docopt import docopt
 import pandas as pd
@@ -38,10 +30,8 @@ from ARB_Biomass_Equations import *
 from ARB_Equation_Assignments import *
 
 
-# In[ ]:
-
 if __name__ == "__main__":
-    
+
     args = docopt(doc, version='1.0')
 
     properties_to_run = args['--property']
@@ -49,18 +39,14 @@ if __name__ == "__main__":
     region = args['--region']
 
 
-# In[3]:
-
 # Read in the CSV files that were exported from FPS
 try:
     FPS_DBHCLS = pd.read_csv('DBHCLS.csv')
     FPS_ADMIN = pd.read_csv('ADMIN.csv')
-    print "Successfully read in DBHCLS and ADMIN tables.\n" 
+    print "Successfully read in DBHCLS and ADMIN tables.\n"
 except IOError:
     print "Could not find your DBHCLS and ADMIN CSV files. Please export them from your FPS database in to the same folder as this script.\n"
 
-
-# In[4]:
 
 # stand_list, a dataframe of all stands in the ADMIN table
 stand_list = FPS_ADMIN[['STD_ID', 'RPT_YR', 'MSMT_YR', 'Property', 'AREA_GIS', 'AREA_RPT']]
@@ -72,21 +58,17 @@ tree_list = FPS_DBHCLS[['RPT_YR', 'STD_ID', 'PlotTree', 'GRP', 'SPECIES', 'TREES
 tree_list = tree_list.merge(stand_list[['STD_ID', 'AREA_GIS', 'AREA_RPT', 'Property']], on='STD_ID')
 
 
-# In[5]:
-
 # report_yr = None
 # properties_to_run = None
 # region = None
 
-
-# In[6]:
 
 # Prompt user to specify a single property
 all_properties = pd.unique(stand_list['Property']).tolist()
 if not properties_to_run:
     print str(len(all_properties)) + ' properties found in the ADMIN table:',
     print ', '.join(str(prop) for prop in all_properties) + "\n"
-    
+
     while True:
         chosen_prop = raw_input('Choose a property to run, or type ALL: ')
         if chosen_prop.lower() == 'all':
@@ -101,8 +83,6 @@ if not properties_to_run:
             print 'Property not recognized. Try again.\n'
 
 
-# In[7]:
-
 # Prompt user to specify a region
 if not region:
     while True:
@@ -113,8 +93,6 @@ if not region:
         else:
             print 'Region not recognized. Try again.\n'
 
-
-# In[8]:
 
 # Prompt user to specify a single report year
 all_years = sorted(pd.unique(tree_list['RPT_YR']).tolist())
@@ -129,18 +107,16 @@ if not report_yr:
             report_yr = [int(report_yr)]
             print 'Running calculations for ' + str(report_yr[0]) + ' only.\n'
             break
-        else: 
+        else:
             print report_yr + ' not found in DBHCLS table. Try again using one of these:'
             print ', '.join(str(yr) for yr in all_years) + '\n'
 
-
-# In[9]:
 
 # check if all species are recognized from user's crosswalk table
 DBHCLS_spp = pd.unique(FPS_DBHCLS.SPECIES) # the species found in the FPS Database
 spp_used_list = species_used.Your_species_code.tolist() # species found in the user's crosswalk table
 print "Found " + str(len(species_used)) + " species in the species crosswalk spreadsheet and " + str(len(DBHCLS_spp)) + " species in the FPS DBHCLS table.\n"
-# if not, list the species that are not recognized 
+# if not, list the species that are not recognized
 missing_spp = [spp for spp in DBHCLS_spp if spp not in spp_used_list] # species_used comes from crosswalk table, in ARB_Equation_Assignments script
 if len(missing_spp) >0:
     print str(len(missing_spp)) + " species found in the FPS DBHCLS table but missing from the species crosswalk spreadsheet will not have carbon storage calculated:"
@@ -149,27 +125,23 @@ else:
     print "All species will have carbon calculations.\n"
 
 
-# In[10]:
-
 # hold out RPT_YR years that were not requested by user
 tree_list = tree_list.loc[tree_list['RPT_YR'].isin(report_yr)] # only include trees from that year
-    
+
 # hold out trees from any properties not requested by user
 stands_in_properties_to_run = pd.unique(stand_list['STD_ID'].loc[stand_list['Property'].isin(properties_to_run)]).tolist()
 tree_list = tree_list.loc[tree_list['STD_ID'].isin(stands_in_properties_to_run)]
-        
+
 # hold out any trees that were not in species crosswalk spreadsheet
 if len(missing_spp) >0:
     missing_trees = tree_list.loc[tree_list['SPECIES'].isin(missing_spp)]
     tree_list = tree_list.loc[~tree_list['SPECIES'].isin(missing_spp)]
-    
-# hold out any trees that are not living, based on a GRP code 
+
+# hold out any trees that are not living, based on a GRP code
 live_trees = ['..', '.R', '.I', '.L', '.W'] # codes for live, residual, ingrowth, leave, and wildlife trees
 dead_trees = tree_list.loc[~tree_list['GRP'].isin(live_trees)] # trees with codes other than live_trees
 tree_list = tree_list.loc[tree_list['GRP'].isin(live_trees)] # trees only with recognized live_trees codes
 
-
-# In[11]:
 
 # add new columns to the tree_list for individual trees:
 
@@ -179,7 +151,7 @@ tree_list['FIA_Region'] = region
 # record the ARB Volume Equation Number to be used for each tree
 tree_list['Vol_Eq'] = tree_list['SPECIES'].apply(lambda x: getattr(species_classes[x], region+'_VOL').__name__.split('_')[1])
 # species_classe is a dictionary from ARB_Equation_Assignments.py
-# species_classes contains class objects with attributes for each species such as the volume and biomass equation numbers, etc.  
+# species_classes contains class objects with attributes for each species such as the volume and biomass equation numbers, etc.
 
 # calculate Total Cubic Volume (CVTS, cubic volume including top and stump) for each tree
 def get_vol(row):
@@ -211,7 +183,7 @@ tree_list['Bark_biomass_kg'] = tree_list.apply(get_bark_bio, axis = 1)
 
 # Branch biomass equation and calculation
 tree_list['BranchBio_Eq'] = tree_list['SPECIES'].apply(lambda x: getattr(species_classes[x], region+'_BLB').func_name.split('_')[1])
-def get_branch_bio(row): 
+def get_branch_bio(row):
     # equations use metric units, so convert DBH and HT from English to Metric units
     # equations return units of kg
     return check_BLB(row.DBH*2.54, row.HEIGHT*0.3048, getattr(species_classes[row.SPECIES], region+'_BLB'))
@@ -238,22 +210,18 @@ tree_list['LiveTree_carbon_tCO2e_total_AreaGIS'] = tree_list['LiveTree_carbon_tC
 tree_list['LiveTree_carbon_tCO2e_total_AreaRPT'] = tree_list['LiveTree_carbon_tCO2e_ac'] * tree_list['AREA_RPT']
 
 
-# In[12]:
-
 # add back in unrecognized species and dead_trees
 tree_list = tree_list.append([missing_trees, dead_trees], ignore_index=True)
 
-
-# In[13]:
 
 # sort the tree_list
 tree_list = tree_list.sort_values(by = ['Property', 'RPT_YR', 'STD_ID', 'PlotTree'])
 
 # column order to use for CSV output
-cols = ['Property', 'RPT_YR', 'STD_ID', 'AREA_GIS', 'AREA_RPT', 'PlotTree', 'GRP', 'SPECIES', 'DBH', 'HEIGHT', 
+cols = ['Property', 'RPT_YR', 'STD_ID', 'AREA_GIS', 'AREA_RPT', 'PlotTree', 'GRP', 'SPECIES', 'DBH', 'HEIGHT',
            'TREES', 'FIA_Region', 'Vol_Eq', 'BarkBio_Eq', 'BranchBio_Eq', 'CVTS_ft3', 'Scrib_BF',
            'Wood_density_lbs_ft3', 'Stem_biomass_UStons', 'Stem_biomass_kg', 'Bark_biomass_kg',
-           'Branch_biomass_kg', 'Aboveground_biomass_kg', 'Belowground_biomass_kg', 'LiveTree_biomass_kg', 
+           'Branch_biomass_kg', 'Aboveground_biomass_kg', 'Belowground_biomass_kg', 'LiveTree_biomass_kg',
            'AbovegroundLive_tCO2e', 'BelowgroundLive_tCO2e', 'LiveTree_carbon_tCO2e',
            'AbovegroundLive_tCO2e_ac', 'BelowgroundLive_tCO2e_ac', 'LiveTree_carbon_tCO2e_ac',
            'LiveTree_carbon_tCO2e_total_AreaGIS', 'LiveTree_carbon_tCO2e_total_AreaRPT']
@@ -268,4 +236,3 @@ for prop in properties_to_run:
     num_files += 1
 
 print 'FPS2ARB calculations completed. \n' + str(num_files) + ' CSV file(s) successfully written to ' + os.getcwd() + '\FPS2ARB_Outputs \n'
-
