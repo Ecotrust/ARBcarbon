@@ -1,33 +1,16 @@
-
-# coding: utf-8
-
-# In[1]:
-
 # Tree equations required by the California Air Resources Board (ARB)
 # Used to calculate tree volume for projects located in California, Oregon, or Washington
-
-
-# In[2]:
 
 # These equations were translated from the PDF available on the ARB website:
 # http://www.arb.ca.gov/cc/capandtrade/protocols/usforest/usforestprojects_2015.htm
 # These volume equations were accessed from this page on May 11, 2016, and downloaded as a PDF
 # http://www.arb.ca.gov/cc/capandtrade/protocols/usforest/2015/volume.equations.ca.or.wa.pdf
 
-
-# In[3]:
-
 import math
-
-
-# In[4]:
 
 # ARB-APPROVED VOLUME EQUATIONS ARE REPRODUCED BELOW AS FUNCTIONS
 # Each volume equation is a class that can calculates a variety of variables.
 # These variables are calculated and returned using the calc method of the Equation class.
-
-
-# In[5]:
 
 class Equation(object):
     def __init__(self):
@@ -121,21 +104,13 @@ class Equation(object):
             return 0
         return getattr(self, metric)
 
-
-# In[6]:
-
 # THE VOLUME EQUATIONS
-
-
-# In[7]:
 
 # For species where there is no identified volume equation by ARB/CAR
 class Eq_None(Equation):
     def calc(DBH, HT):
         return 0
 
-
-# In[8]:
 
 # Equation 1 Douglas-Fir (WEYERHAUSER-DNR RPT#24,1977)
 
@@ -182,9 +157,6 @@ class Eq_1(Equation):
         # return the requested metric
         return self.get(metric)
 
-
-# In[9]:
-
 # Equation 2 Douglas-Fir (DNR MEMO--SUMMERFIELD, 11/7/80)
 
 # Summerfield, Edward.  1980. In-house memo describing equations for Douglas-fir and ponderosa pine.
@@ -226,9 +198,6 @@ class Eq_2(Equation):
 
         # return the requested metric
         return self.get(metric)
-
-
-# In[10]:
 
 # Equation 3 Douglas-Fir (USDA-FS RES NOTE PNW-266)
 
@@ -329,8 +298,6 @@ class Eq_3(Equation):
         return self.get(metric)
 
 
-# In[11]:
-
 # Equation 4 Ponderosa pine (DNR MEMO--SUMMERFIELD,11/7/80)
 
 # Summerfield, Edward.  1980. In-house memo describing equations for Douglas-fir and ponderosa pine.
@@ -374,8 +341,6 @@ class Eq_4(Equation):
         # return the requested metric
         return self.get(metric)
 
-
-# In[12]:
 
 # Equation 5 Ponderosa pine (USDA-FS RES NOTE PNW-266)
 
@@ -475,8 +440,6 @@ class Eq_5(Equation):
         return self.get(metric)
 
 
-# In[13]:
-
 # Equation 6 Western hemlock (DNR NOTE 27,4/79)
 
 # Chambers, C.J. and Foltz, B. 1979. The TARIF system -- revisions and additions.,
@@ -520,8 +483,6 @@ class Eq_6(Equation):
         return self.get(metric)
 
 
-# In[14]:
-
 # Equation 7 Western hemlock (BROWN (1962) BC FOREST SERV,P33)
 
 # Browne, J.E. 1962. Standard cubic-foot volume tables for the commercial tree species
@@ -564,8 +525,6 @@ class Eq_7(Equation):
         # return the requested metric
         return self.get(metric)
 
-
-# In[15]:
 
 # Equation 8 Redcedar (REDCEDAR INTERIOR--DNR RPT#24,1977)
 
@@ -613,8 +572,6 @@ class Eq_8(Equation):
         return self.get(metric)
 
 
-# In[16]:
-
 # Equation 9 Redcedar (REDCEDAR COAST--DNR RPT#24,1977)
 
 # Brackett, M. 1973. Notes on TARIF tree volume computation. Res. Management Report 24.
@@ -660,8 +617,6 @@ class Eq_9(Equation):
         # return the requested metric
         return self.get(metric)
 
-
-# In[17]:
 
 # Equation 10 True Firs (INTERIOR BALSAM--DNR RPT#24,1977)
 
@@ -709,8 +664,6 @@ class Eq_10(Equation):
         return self.get(metric)
 
 
-# In[18]:
-
 # Equation 11 True Firs (COAST BALSAM--DNR RPT#24,1977)
 
 # Brackett, M. 1973. Notes on TARIF tree volume computation. Res. Management Report 24.
@@ -756,8 +709,6 @@ class Eq_11(Equation):
         # return the requested metric
         return self.get(metric)
 
-
-# In[19]:
 
 # Equation 12 Spruce (SITKA SPRUCE INTERIOR--DNR RPT#24,1977)
 
@@ -805,8 +756,6 @@ class Eq_12(Equation):
         return self.get(metric)
 
 
-# In[20]:
-
 # EQUATION 13 SPRUCE (SITKA SPRUCE MATURE--DNR RPT#24,1977)
 
 # Brackett, M. 1973. Notes on TARIF tree volume computation. Res. Management Report 24.
@@ -852,8 +801,6 @@ class Eq_13(Equation):
         # return the requested metric
         return self.get(metric)
 
-
-# In[21]:
 
 # EQUATION 14 - OTHER JUNIPERS (CHOJNACKY, 1985)
 
@@ -902,8 +849,6 @@ class Eq_14(Equation):
         return self.get(metric)
 
 
-# In[22]:
-
 # EQUATION 14.1 - SINGLELEAF PINYON (CHOJNACKY, 1985)
 
 # Chojnacky D.C., 1985.  Pinyon-Juniper Volume Equations for the Central Rocky Mountain States.
@@ -950,8 +895,6 @@ class Eq_141(Equation):
         return self.get(metric)
 
 
-# In[23]:
-
 # EQUATION 14.2 - ROCKY MOUNTAIN JUNIPER (CHOJNACKY, 1985)
 
 # Chojnacky D.C., 1985.  Pinyon-Juniper Volume Equations for the Central Rocky Mountain States.
@@ -992,8 +935,6 @@ class Eq_142(Equation):
         # return the requested metric
         return self.get(metric)
 
-
-# In[24]:
 
 # EQUATION 15 LODGEPOLE PINE (LODGEPOLE PINE--DNR RPT#24,1977)
 
@@ -1040,8 +981,6 @@ class Eq_15(Equation):
         # return the requested metric
         return self.get(metric)
 
-
-# In[25]:
 
 # EQUATION 16 LODGEPOLE PINE (USDA-FS RES NOTE PNW-266)
 
@@ -1141,8 +1080,6 @@ class Eq_16(Equation):
         return self.get(metric)
 
 
-# In[26]:
-
 # EQUATION 17 MTN.HEMLOCK (BELL, OSU RES.BULL 35)
 
 # Bell, J.F., Marshall, D.D. and Johnson G.P.  1981.  Tarif tables for mountain hemlock:
@@ -1183,8 +1120,6 @@ class Eq_17(Equation):
         # return the requested metric
         return self.get(metric)
 
-
-# In[27]:
 
 # EQUATION 18 SHASTA RED FIR (USDA-FS RES NOTE PNW-266)
 
@@ -1284,8 +1219,6 @@ class Eq_18(Equation):
         return self.get(metric)
 
 
-# In[28]:
-
 # EQUATION 19 INCENSE CEDAR (USDA-FS RES NOTE PNW-266)
 
 # MacLean, Colin and John M. Berger.  1976.  Softwood tree-volume equations for major California species.
@@ -1380,8 +1313,6 @@ class Eq_19(Equation):
         # return the requested metric
         return self.get(metric)
 
-
-# In[29]:
 
 # EQUATION 20 SUGAR PINE (USDA-FS RES NOTE PNW-266)
 
@@ -1481,8 +1412,6 @@ class Eq_20(Equation):
         return self.get(metric)
 
 
-# In[30]:
-
 # EQUATION 21 W.JUNIPER (CHITTESTER,1984)
 
 # Chittester, Judith and Colin MacLean.  1984.  Cubic-foot tree-volume equations and tables for western juniper.
@@ -1529,8 +1458,6 @@ class Eq_21(Equation):
         return self.get(metric)
 
 
-# In[31]:
-
 # EQUATION 22 W.LARCH (LARCH--DNR RPT#24,1977)
 class Eq_22(Equation):
     def __init__(self):
@@ -1569,8 +1496,6 @@ class Eq_22(Equation):
         # return the requested metric
         return self.get(metric)
 
-
-# In[32]:
 
 # EQUATION 23 WHITE FIR (USDA-FS RES NOTE PNW-266)
 
@@ -1670,8 +1595,6 @@ class Eq_23(Equation):
         return self.get(metric)
 
 
-# In[33]:
-
 # EQUATION 24 REDWOOD (Krumland, B.E. and L.E. Wensel. 1975. And DNR RPT#24,1977)
 
 # Krumland, B.E. and L.E. Wensel. 1975. Preliminary young growth volume tables for coastal California conifers.
@@ -1713,8 +1636,6 @@ class Eq_24(Equation):
         # return the requested metric
         return self.get(metric)
 
-
-# In[34]:
 
 # EQUATION 25 ALDER (CURTIS/BRUCE, PNW-56)
 
@@ -1772,8 +1693,6 @@ class Eq_25(Equation):
         return self.get(metric)
 
 
-# In[35]:
-
 # EQUATION 26 ALDER (BC-ALDER--DNR RPT#24,1977)
 
 # Brackett, Michael.  1977. Notes on TARIF tree-volume computation.  DNR report #24.
@@ -1819,8 +1738,6 @@ class Eq_26(Equation):
         # return the requested metric
         return self.get(metric)
 
-
-# In[36]:
 
 # EQUATION 27 COTTONWOOD (BC-COTTONWOOD--DNR RPT#24,1977)
 
@@ -1868,8 +1785,6 @@ class Eq_27(Equation):
         return self.get(metric)
 
 
-# In[37]:
-
 # EQUATION 28 ASPEN (BC-ASPEN--DNR RPT#24,1977)
 
 # Brackett, Michael.  1977. Notes on TARIF tree-volume computation.  DNR report #24.
@@ -1915,8 +1830,6 @@ class Eq_28(Equation):
         # return the requested metric
         return self.get(metric)
 
-
-# In[38]:
 
 # EQUATION 29 BIRCH (BC-BIRCH--DNR RPT#24,1977)
 
@@ -1964,8 +1877,6 @@ class Eq_29(Equation):
         return self.get(metric)
 
 
-# In[39]:
-
 # EQUATION 30 BIGLEAF MAPLE (BC-MAPLE--DNR RPT#24,1977)
 
 # Brackett, Michael.  1977. Notes on TARIF tree-volume computation.  DNR report #24.
@@ -2012,8 +1923,6 @@ class Eq_30(Equation):
         return self.get(metric)
 
 
-# In[40]:
-
 # EQUATION 31 EUCALYPTUS (MEMO,COLIN D. MacLEAN 1/27/83,(REVISED 2/7/83) )
 
 # Colin MacLean and Tom Farrenkopf. 1983. Eucalyptus volume equation.  In-house memo
@@ -2058,8 +1967,6 @@ class Eq_31(Equation):
         # return the requested metric
         return self.get(metric)
 
-
-# In[41]:
 
 # EQUATION 32 G.CHINQUAPIN (PILLSBURY (H,D), CHARLES BOLSINGER 1/3/83)
 
@@ -2110,8 +2017,6 @@ class Eq_32(Equation):
         return self.get(metric)
 
 
-# In[42]:
-
 # EQUATION 33 C.LAUREL (PILLSBURY (H,D), CHARLES BOLSINGER 1/3/83)
 
 # Pillsbury, Norman H. and Michael L. Kirkley. 1984.  Equations for Total, Wood, and
@@ -2160,8 +2065,6 @@ class Eq_33(Equation):
         # return the requested metric
         return self.get(metric)
 
-
-# In[43]:
 
 # EQUATION 34 TANOAK (PILLSBURY (H,D), CHARLES BOLSINGER 1/3/83)
 
@@ -2215,8 +2118,6 @@ class Eq_34(Equation):
         return self.get(metric)
 
 
-# In[44]:
-
 # EQUATION 35 CALIF WHITE OAK (PILLSBURY (H,D), CHARLES BOLSINGER 1/3/83)
 
 # Pillsbury, Norman H. and Michael L. Kirkley. 1984.  Equations for Total, Wood, and
@@ -2266,8 +2167,6 @@ class Eq_35(Equation):
         return self.get(metric)
 
 
-# In[45]:
-
 # EQUATION 36 ENGELMANN OAK (PILLSBURY (H,D), CHARLES BOLSINGER 1/3/83)
 
 # Pillsbury, Norman H. and Michael L. Kirkley. 1984.  Equations for Total, Wood, and
@@ -2316,8 +2215,6 @@ class Eq_36(Equation):
         # return the requested metric
         return self.get(metric)
 
-
-# In[46]:
 
 # EQUATION 37 BIGLEAF MAPLE (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
@@ -2411,8 +2308,6 @@ class Eq_37(Equation):
         return self.get(metric)
 
 
-# In[47]:
-
 # EQUATION 38 CALIF BLACK OAK (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
 # Pillsbury, Norman H. and Michael L. Kirkley. 1984.  Equations for Total, Wood, and
@@ -2505,8 +2400,6 @@ class Eq_38(Equation):
         return self.get(metric)
 
 
-# In[48]:
-
 # EQUATION 39 BLUE OAK (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
 # Pillsbury, Norman H. and Michael L. Kirkley. 1984.  Equations for Total, Wood, and
@@ -2590,8 +2483,6 @@ class Eq_39(Equation):
         # return the requested metric
         return self.get(metric)
 
-
-# In[49]:
 
 # EQUATION 40 PACIFIC MADRONE (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
@@ -2679,8 +2570,6 @@ class Eq_40(Equation):
         # return the requested metric
         return self.get(metric)
 
-
-# In[50]:
 
 # EQUATION 41 ORE WHITE OAK (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
@@ -2774,8 +2663,6 @@ class Eq_41(Equation):
         return self.get(metric)
 
 
-# In[51]:
-
 # EQUATION 42 CANYON LIVE OAK (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
 # Pillsbury, Norman H. and Michael L. Kirkley. 1984.  Equations for Total, Wood, and
@@ -2859,8 +2746,6 @@ class Eq_42(Equation):
         # return the requested metric
         return self.get(metric)
 
-
-# In[52]:
 
 # EQUATION 43 COAST LIVE OAK (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
@@ -2948,8 +2833,6 @@ class Eq_43(Equation):
         return self.get(metric)
 
 
-# In[53]:
-
 # EQUATION 44 INT LIVE OAK (PILLSBURY (H,D,FC), CHARLES BOLSINGER 1/3/83)
 
 # Pillsbury, Norman H. and Michael L. Kirkley. 1984.  Equations for Total, Wood, and
@@ -3025,8 +2908,6 @@ class Eq_44(Equation):
         return self.get(metric)
 
 
-# In[54]:
-
 # EQUATION 45 MTN. MAHOGANY (Chojnacky, 1985)
 
 # Chojnacky D.C., 1985.  Pinyon-Juniper Volume Equations for the Central Rocky Mountain States.
@@ -3076,8 +2957,6 @@ class Eq_45(Equation):
         # return the requested metric
         return self.get(metric)
 
-
-# In[55]:
 
 # EQUATION 46 MESQUITE (Chojnacky, 1985)
 
@@ -3133,8 +3012,6 @@ class Eq_46(Equation):
         # return the requested metric
         return self.get(metric)
 
-
-# In[56]:
 
 # For calculating boardfoot volume of softwoods
 def SW_BFConversion(DBH, CV4, TARIF, metric):
@@ -3201,8 +3078,6 @@ def SW_BFConversion(DBH, CV4, TARIF, metric):
     else:
         return metric_dict[metric]
 
-
-# In[57]:
 
 # For calculating boardfoot volume of hardwoods
 def HW_BFConversion(CV4, CV8, DBH, eq_number, CVT, TARIF, HT, metric):
@@ -3278,8 +3153,6 @@ def HW_BFConversion(CV4, CV8, DBH, eq_number, CVT, TARIF, HT, metric):
         return metric_dict[metric]
 
 
-# In[58]:
-
 def graph_equations(equations='all', metrics=['CVTS']):
     '''
     Tests a range of diameters and heights for cubic volume including top and stump.
@@ -3319,8 +3192,6 @@ def graph_equations(equations='all', metrics=['CVTS']):
             ax.set_zlim(zmin=0)
             plt.show()
 
-
-# In[59]:
 
 def test_negatives(equations='all', metrics=['CVTS']):
     '''
