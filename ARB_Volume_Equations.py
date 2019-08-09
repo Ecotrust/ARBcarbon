@@ -1320,10 +1320,9 @@ class Eq_19(Equation):
         # CALCULATE A CUBIC FORM FACTOR (CF4) USING TMP_DBH and DBH
         # CF4 EQUATIONS VARY BY VOLUME EQUATION
         CF4 = 0.225786 + 4.44236 * (1/HT)
-        if(CF4 < 0.3):
-            CF4=0.3
-        if(CF4 > 0.4): 
-            CF4=0.4
+        if(CF4 < 0.27):
+            CF4=0.27
+
         CF4_TMP = 0.225786 + 4.44236 * (1/HT)
         if(CF4_TMP < 0.3):
             CF4_TMP=0.3
