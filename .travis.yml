@@ -1,0 +1,25 @@
+language: python
+
+python:
+  - "3.6"
+  - "3.7"
+  - "3.8"
+  - "3.9"
+
+install:
+  - sudo apt-get update
+  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update --quiet conda
+  - conda info --all
+  - conda env create --quiet --name arb --file environment.yml
+  - source activate arb
+  - conda install -c conda-forge coveralls flake8
+
+script:
+  - coverage run -m unittest discover -s arb_carbon
+  - flake8 ./arb_carbon/equations
+  - coveralls

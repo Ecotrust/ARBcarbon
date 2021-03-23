@@ -1,0 +1,9 @@
+name: arb
+
+channels:
+  - conda-forge
+
+dependencies:
+  - numpy
+
+prefix: /home/ddiaz/miniconda3/arb
