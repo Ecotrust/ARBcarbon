@@ -3219,7 +3219,7 @@ def test_negatives(equations='all', metrics=['CVTS']):
                         negatives.append([DBH, HT, eqn().calc(DBH,HT,metric)])
 
     if len(negatives) > 0:
-        print "These equations created negatives."
-        print negatives
+        print("These equations created negatives.")
+        print(negatives)
     elif len(negatives) == 0:
-        print "No negatives!"
+        print("No negatives!")
