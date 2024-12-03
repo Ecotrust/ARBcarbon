@@ -51,6 +51,11 @@ class BarkBiomass(object):
                 .clip(0, None))
 
 
+class BB_None(BarkBiomass):  
+    def calc_biomass(self, dbh, ht=None, wood_density=None):
+        return np.zeros_like(dbh)
+
+
 class BB_1(BarkBiomass):  # BIOPAK EQUATION 379
     def calc_biomass(self, dbh, ht=None, wood_density=None):
         return np.exp(2.1069 + 2.7271 * np.log(dbh))/1000
