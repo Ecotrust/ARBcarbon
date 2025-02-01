@@ -50,6 +50,11 @@ class BranchBiomass(object):
         return self.calc_biomass(dbh, ht).clip(0, None)
 
 
+class BLB_None(BranchBiomass):  
+    def calc_biomass(self, dbh, ht=None):
+        return np.zeros_like(dbh)
+    
+    
 class BLB_1(BranchBiomass):  # BIOPAK EQUATION 889
     def calc_biomass(self, dbh, ht):
         return 13.0 + 12.4 * (dbh/100)**2 * ht

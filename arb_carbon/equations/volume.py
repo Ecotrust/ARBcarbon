@@ -239,6 +239,7 @@ class SoftwoodVolumeEquation(VolumeEquation):
         cv4 = self.calc_cv4(dbh, ht)
 
         cv6 = np.where((rc6 * cv4) > cv4, cv4, rc6 * cv4)
+        cv6[np.logical_or(dbh < 9, ht <= 0)] = 0
 
         return cv6
 
@@ -254,6 +255,7 @@ class SoftwoodVolumeEquation(VolumeEquation):
         rs616 = 10.0**rs616l
 
         sv616 = np.clip(rs616 * cv6, 0, None)
+        sv616[np.logical_or(dbh < 9, ht <= 0)] = 0
 
         return sv616
 
@@ -264,6 +266,7 @@ class SoftwoodVolumeEquation(VolumeEquation):
 
         rs632 = 1.001491 - 6.924097 / tarif + 0.00001351 * dbh**2
         sv632 = np.clip(rs632 * sv616, 0, None)
+        sv632[np.logical_or(dbh < 9, ht <= 0)] = 0
 
         return sv632
 
@@ -275,6 +278,7 @@ class SoftwoodVolumeEquation(VolumeEquation):
             dbh * tarif
         ) - 0.02765985 * dbh - 0.00008205 * tarif**2 + 11.29598 / dbh**2
         xint6 = np.clip(ri6 * cv6, 0, None)
+        xint6[np.logical_or(dbh < 9, ht <= 0)] = 0
 
         return xint6
 
@@ -293,6 +297,7 @@ class HardwoodVolumeEquation(VolumeEquation):
 
         rc6 = 0.993 - 0.993 * 0.62**(dbh - 6.0)
         cv6 = np.clip(rc6 * cv4x, 0, None)
+        cv6[np.logical_or(dbh < 9, ht <= 0)] = 0
 
         return cv6
 
@@ -306,6 +311,7 @@ class HardwoodVolumeEquation(VolumeEquation):
                 b4) - 0.00001345 * b4**2 - 0.00001937 * dbh**2
         rs616 = 10.0**rs616l
         sv616 = np.clip(rs616 * cv6, 0, None)
+        sv616[np.logical_or(dbh < 9, ht <= 0)] = 0
 
         return sv616
 
@@ -314,6 +320,7 @@ class HardwoodVolumeEquation(VolumeEquation):
 
         rs816 = 0.990 - 0.58 * (0.484**(dbh - 9.5))
         sv816 = np.clip(rs816 * sv616, 0, None)
+        sv816[np.logical_or(dbh < 11, ht <= 0)] = 0
 
         return sv816
 
@@ -325,6 +332,7 @@ class HardwoodVolumeEquation(VolumeEquation):
             dbh * tarifx
         ) - 0.02765985 * dbh - 0.00008205 * tarifx**2 + 11.29598 / dbh**2
         xint6 = np.clip(ri6 * cv6, 0, None)
+        xint6[np.logical_or(dbh < 9, ht <= 0)] = 0
 
         return xint6
 
@@ -333,6 +341,7 @@ class HardwoodVolumeEquation(VolumeEquation):
 
         ri8 = 0.990 - 0.55 * (0.485**(dbh - 9.5))
         xint8 = np.clip(xint6 * ri8, 0, None)
+        xint8[np.logical_or(dbh < 11, ht <= 0)] = 0
 
         return xint8
 
@@ -379,7 +388,7 @@ class Eq_1(SoftwoodVolumeEquation):
                 ht) - 0.16185 * (np.log10(ht))**2
 
         cvts = 10**cvtsl
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -399,7 +408,7 @@ class Eq_1(SoftwoodVolumeEquation):
         tarif = self.calc_tarif(dbh, ht)
 
         cv4 = tarif * (ba - 0.087266) / 0.912733
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -410,7 +419,7 @@ class Eq_1(SoftwoodVolumeEquation):
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * (
             (1.033 * (1.0 + 1.382937 * np.exp(-4.015292 * (dbh / 10.0))))
             * (ba + 0.087266) - 0.174533) / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -427,7 +436,7 @@ class Eq_2(SoftwoodVolumeEquation):
         cvtsl = -6.110493 + 1.81306 * np.log(dbh) + 1.083884 * np.log(ht)
 
         cvts = np.exp(cvtsl)
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -447,7 +456,7 @@ class Eq_2(SoftwoodVolumeEquation):
         tarif = self.calc_tarif(dbh, ht)
 
         cv4 = tarif * (ba - 0.087266) / 0.912733
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -458,7 +467,7 @@ class Eq_2(SoftwoodVolumeEquation):
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * (
             (1.033 * (1.0 + 1.382937 * np.exp(-4.015292 * (dbh / 10.0))))
             * (ba + 0.087266) - 0.174533) / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -480,7 +489,7 @@ class Eq_3(SoftwoodVolumeEquation):
 
         cvts = np.where(dbh < 6.0, tarif * term,
                         (cv4 * term) / (ba - 0.087266))
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -522,7 +531,7 @@ class Eq_3(SoftwoodVolumeEquation):
 
         cv4 = cf4 * ba * ht
         cv4 = np.where(dbh < 5.0, 0, cv4)
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -533,7 +542,7 @@ class Eq_3(SoftwoodVolumeEquation):
         tarif = self.calc_tarif(dbh, ht)
 
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * term / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -552,7 +561,7 @@ class Eq_4(SoftwoodVolumeEquation):
         cvtsl = -8.521558 + 1.977243 * np.log(dbh) - 0.105288 * (
             np.log(ht))**2 + 136.0489 / ht**2 + 1.99546 * np.log(ht)
         cvts = np.exp(cvtsl)
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -572,7 +581,7 @@ class Eq_4(SoftwoodVolumeEquation):
 
         tarif = self.calc_tarif(dbh, ht)
         cv4 = tarif * (ba - 0.087266) / 0.912733
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -583,7 +592,7 @@ class Eq_4(SoftwoodVolumeEquation):
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * (
             (1.033 * (1.0 + 1.382937 * np.exp(-4.015292 * (dbh / 10.0))))
             * (ba + 0.087266) - 0.174533) / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -605,7 +614,7 @@ class Eq_5(SoftwoodVolumeEquation):
 
         cvts = np.where(dbh >= 6.0, (cv4 * term) / (ba - 0.087266),
                         tarif * term)
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -616,7 +625,7 @@ class Eq_5(SoftwoodVolumeEquation):
         tarif = self.calc_tarif(dbh, ht)
 
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * term / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -650,7 +659,7 @@ class Eq_5(SoftwoodVolumeEquation):
         cf4 = np.clip(0.402060 - 0.899914 * (1 / dbh), 0.3, 0.4)
 
         cv4 = np.where(dbh >= 5.0, cf4 * ba * ht, 0)
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -668,7 +677,7 @@ class Eq_6(SoftwoodVolumeEquation):
             ht) - 0.00568 * dbh
 
         cvts = 10**cvtsl
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -689,7 +698,7 @@ class Eq_6(SoftwoodVolumeEquation):
         tarif = self.calc_tarif(dbh, ht)
 
         cv4 = tarif * (ba - 0.087266) / 0.912733
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -700,7 +709,7 @@ class Eq_6(SoftwoodVolumeEquation):
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * (
             (1.033 * (1.0 + 1.382937 * np.exp(-4.015292 * (dbh / 10.0))))
             * (ba + 0.087266) - 0.174533) / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -716,7 +725,7 @@ class Eq_7(SoftwoodVolumeEquation):
         cvtsl = -2.663834 + 1.79023 * np.log10(dbh) + 1.124873 * np.log10(ht)
 
         cvts = 10**cvtsl
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -736,7 +745,7 @@ class Eq_7(SoftwoodVolumeEquation):
         tarif = self.calc_tarif(dbh, ht)
 
         cv4 = tarif * (ba - 0.087266) / 0.912733
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -747,7 +756,7 @@ class Eq_7(SoftwoodVolumeEquation):
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * (
             (1.033 * (1.0 + 1.382937 * np.exp(-4.015292 * (dbh / 10.0))))
             * (ba + 0.087266) - 0.174533) / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -767,7 +776,7 @@ class Eq_8(SoftwoodVolumeEquation):
         cvtsl = -2.464614 + 1.701993 * np.log10(dbh) + 1.067038 * np.log10(ht)
 
         cvts = 10**cvtsl
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -787,7 +796,7 @@ class Eq_8(SoftwoodVolumeEquation):
         tarif = self.calc_tarif(dbh, ht)
 
         cv4 = tarif * (ba - 0.087266) / 0.912733
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -798,7 +807,7 @@ class Eq_8(SoftwoodVolumeEquation):
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * (
             (1.033 * (1.0 + 1.382937 * np.exp(-4.015292 * (dbh / 10.0))))
             * (ba + 0.087266) - 0.174533) / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -818,7 +827,7 @@ class Eq_9(SoftwoodVolumeEquation):
         cvtsl = -2.379642 + 1.682300 * np.log10(dbh) + 1.039712 * np.log10(ht)
 
         cvts = 10**cvtsl
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -838,7 +847,7 @@ class Eq_9(SoftwoodVolumeEquation):
         tarif = self.calc_tarif(dbh, ht)
 
         cv4 = tarif * (ba - 0.087266) / 0.912733
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -849,7 +858,7 @@ class Eq_9(SoftwoodVolumeEquation):
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * (
             (1.033 * (1.0 + 1.382937 * np.exp(-4.015292 * (dbh / 10.0))))
             * (ba + 0.087266) - 0.174533) / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -869,7 +878,7 @@ class Eq_10(SoftwoodVolumeEquation):
         cvtsl = -2.502332 + 1.864963 * np.log10(dbh) + 1.004903 * np.log10(ht)
 
         cvts = 10**cvtsl
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -889,7 +898,7 @@ class Eq_10(SoftwoodVolumeEquation):
         tarif = self.calc_tarif(dbh, ht)
 
         cv4 = tarif * (ba - 0.087266) / 0.912733
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -900,7 +909,7 @@ class Eq_10(SoftwoodVolumeEquation):
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * (
             (1.033 * (1.0 + 1.382937 * np.exp(-4.015292 * (dbh / 10.0))))
             * (ba + 0.087266) - 0.174533) / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -920,7 +929,7 @@ class Eq_11(SoftwoodVolumeEquation):
         cvtsl = -2.575642 + 1.806775 * np.log10(dbh) + 1.094665 * np.log10(ht)
 
         cvts = 10**cvtsl
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -940,7 +949,7 @@ class Eq_11(SoftwoodVolumeEquation):
         tarif = self.calc_tarif(dbh, ht)
 
         cv4 = tarif * (ba - 0.087266) / 0.912733
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -951,7 +960,7 @@ class Eq_11(SoftwoodVolumeEquation):
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * (
             (1.033 * (1.0 + 1.382937 * np.exp(-4.015292 * (dbh / 10.0))))
             * (ba + 0.087266) - 0.174533) / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -971,7 +980,7 @@ class Eq_12(SoftwoodVolumeEquation):
         cvtsl = -2.539944 + 1.841226 * np.log10(dbh) + 1.034051 * np.log10(ht)
 
         cvts = 10**cvtsl
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -991,7 +1000,7 @@ class Eq_12(SoftwoodVolumeEquation):
         tarif = self.calc_tarif(dbh, ht)
 
         cv4 = tarif * (ba - 0.087266) / 0.912733
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -1002,7 +1011,7 @@ class Eq_12(SoftwoodVolumeEquation):
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * (
             (1.033 * (1.0 + 1.382937 * np.exp(-4.015292 * (dbh / 10.0))))
             * (ba + 0.087266) - 0.174533) / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -1022,7 +1031,7 @@ class Eq_13(SoftwoodVolumeEquation):
         cvtsl = -2.700574 + 1.754171 * np.log10(dbh) + 1.164531 * np.log10(ht)
 
         cvts = 10**cvtsl
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -1042,7 +1051,7 @@ class Eq_13(SoftwoodVolumeEquation):
         tarif = self.calc_tarif(dbh, ht)
 
         cv4 = tarif * (ba - 0.087266) / 0.912733
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -1053,7 +1062,7 @@ class Eq_13(SoftwoodVolumeEquation):
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * (
             (1.033 * (1.0 + 1.382937 * np.exp(-4.015292 * (dbh / 10.0))))
             * (ba + 0.087266) - 0.174533) / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -1073,7 +1082,7 @@ class Eq_14(SoftwoodVolumeEquation):
         cvts = np.clip(
             (-0.13386 + (0.133726 * (factor**(1. / 3.))) + (0.036329 * s))**3,
             0.1, None)
-        cvts[np.logical_or(drc <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(drc < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -1093,7 +1102,7 @@ class Eq_14_1(SoftwoodVolumeEquation):
         cvts = np.clip(
             (-0.14240 + (0.148190 * (factor**(1. / 3.))) - (0.16712 * s))**3,
             0.1, None)
-        cvts[np.logical_or(drc <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(drc < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -1111,7 +1120,7 @@ class Eq_14_2(SoftwoodVolumeEquation):
 
         cvts = np.clip((0.02434 + (0.119106 * (factor**(1. / 3.))))**3, 0.1,
                        None)
-        cvts[np.logical_or(drc <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(drc < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -1131,7 +1140,7 @@ class Eq_15(SoftwoodVolumeEquation):
         cvtsl = -2.615591 + 1.847504 * np.log10(dbh) + 1.085772 * np.log10(ht)
 
         cvts = 10**cvtsl
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -1151,7 +1160,7 @@ class Eq_15(SoftwoodVolumeEquation):
         tarif = self.calc_tarif(dbh, ht)
 
         cv4 = tarif * (ba - 0.087266) / 0.912733
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -1162,7 +1171,7 @@ class Eq_15(SoftwoodVolumeEquation):
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * (
             (1.033 * (1.0 + 1.382937 * np.exp(-4.015292 * (dbh / 10.0))))
             * (ba + 0.087266) - 0.174533) / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -1184,7 +1193,7 @@ class Eq_16(SoftwoodVolumeEquation):
 
         cvts = np.where(dbh < 6.0, tarif * term,
                         (cv4 * term) / (ba - 0.087266))
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -1225,8 +1234,8 @@ class Eq_16(SoftwoodVolumeEquation):
         cf4 = np.clip(cf4, 0.3, 0.4)
 
         cv4 = cf4 * ba * ht
-        cv4 = np.where(dbh < 5.0, 0, cv4)
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        #cv4 = np.where(dbh < 5.0, 0, cv4)
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -1237,7 +1246,7 @@ class Eq_16(SoftwoodVolumeEquation):
         tarif = self.calc_tarif(dbh, ht)
 
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * term / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -1253,7 +1262,7 @@ class Eq_17(SoftwoodVolumeEquation):
 
     def calc_cvts(self, dbh, ht):
         cvts = 0.001106485 * dbh**1.8140497 * ht**1.2744923
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -1273,7 +1282,7 @@ class Eq_17(SoftwoodVolumeEquation):
         tarif = self.calc_tarif(dbh, ht)
 
         cv4 = tarif * (ba - 0.087266) / 0.912733
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -1284,7 +1293,7 @@ class Eq_17(SoftwoodVolumeEquation):
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * (
             (1.033 * (1.0 + 1.382937 * np.exp(-4.015292 * (dbh / 10.0))))
             * (ba + 0.087266) - 0.174533) / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -1306,7 +1315,7 @@ class Eq_18(SoftwoodVolumeEquation):
 
         cvts = np.where(dbh < 6.0, tarif * term,
                         (cv4 * term) / (ba - 0.087266))
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -1340,8 +1349,8 @@ class Eq_18(SoftwoodVolumeEquation):
 
         cf4 = np.clip(0.231237 + 0.028176 * (ht / dbh), 0.3, 0.4)
         cv4 = cf4 * ba * ht
-        cv4 = np.where(dbh < 5.0, 0, cv4)
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        #cv4 = np.where(dbh < 5.0, 0, cv4)
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -1352,7 +1361,7 @@ class Eq_18(SoftwoodVolumeEquation):
         tarif = self.calc_tarif(dbh, ht)
 
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * term / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -1374,7 +1383,7 @@ class Eq_19(SoftwoodVolumeEquation):
 
         cvts = np.where(dbh < 6.0, tarif * term,
                         (cv4 * term) / (ba - 0.087266))
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -1408,8 +1417,8 @@ class Eq_19(SoftwoodVolumeEquation):
 
         cf4 = np.clip(0.225786 + 4.44236 * (1 / ht), 0.27, None)
         cv4 = cf4 * ba * ht
-        cv4 = np.where(dbh < 5.0, 0, cv4)
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        #cv4 = np.where(dbh < 5.0, 0, cv4)
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -1420,7 +1429,7 @@ class Eq_19(SoftwoodVolumeEquation):
         tarif = self.calc_tarif(dbh, ht)
 
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * term / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -1442,7 +1451,7 @@ class Eq_20(SoftwoodVolumeEquation):
 
         cvts = np.where(dbh < 6.0, tarif * term,
                         (cv4 * term) / (ba - 0.087266))
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -1476,8 +1485,8 @@ class Eq_20(SoftwoodVolumeEquation):
         cf4 = np.clip(0.358550 - 0.488134 * (1 / dbh), 0.3, 0.4)
 
         cv4 = cf4 * ba * ht
-        cv4 = np.where(dbh < 5.0, 0, cv4)
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        #cv4 = np.where(dbh < 5.0, 0, cv4)
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -1488,7 +1497,7 @@ class Eq_20(SoftwoodVolumeEquation):
         tarif = self.calc_tarif(dbh, ht)
 
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * term / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -1505,7 +1514,7 @@ class Eq_21(SoftwoodVolumeEquation):
         cvts = (0.005454154 * (0.30708901 + 0.00086157622 * ht
                 - 0.0037255243 * dbh * ht
                 / (ht - 4.5)) * dbh**2 * ht * (ht / (ht - 4.5))**2).clip(0,)
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -1524,7 +1533,7 @@ class Eq_21(SoftwoodVolumeEquation):
         cvts = self.calc_cvts(dbh, ht)
 
         cv4 = (cvts + 3.48) / (1.18052 + 0.32736 * np.exp(-0.1 * dbh)) - 2.948
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -1535,7 +1544,7 @@ class Eq_21(SoftwoodVolumeEquation):
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * (
             (1.033 * (1.0 + 1.382937 * np.exp(-4.015292 * (dbh / 10.0))))
             * (ba + 0.087266) - 0.174533) / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -1555,7 +1564,7 @@ class Eq_22(SoftwoodVolumeEquation):
         cvtsl = -2.624325 + 1.847123 * np.log10(dbh) + 1.044007 * np.log10(ht)
 
         cvts = 10**cvtsl
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -1575,7 +1584,7 @@ class Eq_22(SoftwoodVolumeEquation):
         tarif = self.calc_tarif(dbh, ht)
 
         cv4 = tarif * (ba - 0.087266) / 0.912733
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -1586,7 +1595,7 @@ class Eq_22(SoftwoodVolumeEquation):
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * (
             (1.033 * (1.0 + 1.382937 * np.exp(-4.015292 * (dbh / 10.0))))
             * (ba + 0.087266) - 0.174533) / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -1608,7 +1617,7 @@ class Eq_23(SoftwoodVolumeEquation):
 
         cvts = np.where(dbh < 6.0, tarif * term,
                         (cv4 * term) / (ba - 0.087266))
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -1649,8 +1658,8 @@ class Eq_23(SoftwoodVolumeEquation):
         cf4 = np.clip(cf4, 0.3, 0.4)
 
         cv4 = cf4 * ba * ht
-        cv4 = np.where(dbh < 5.0, 0, cv4)
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        #cv4 = np.where(dbh < 5.0, 0, cv4)
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -1661,7 +1670,7 @@ class Eq_23(SoftwoodVolumeEquation):
                 * (ba + 0.087266) - 0.174533)
 
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * term / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -1678,7 +1687,7 @@ class Eq_24(SoftwoodVolumeEquation):
 
     def calc_cvts(self, dbh, ht):
         cvts = np.exp(-6.2597 + 1.9967 * np.log(dbh) + 0.9642 * np.log(ht))
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -1698,7 +1707,7 @@ class Eq_24(SoftwoodVolumeEquation):
         tarif = self.calc_tarif(dbh, ht)
 
         cv4 = tarif * (ba - 0.087266) / 0.912733
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -1709,7 +1718,7 @@ class Eq_24(SoftwoodVolumeEquation):
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * (
             (1.033 * (1.0 + 1.382937 * np.exp(-4.015292 * (dbh / 10.0))))
             * (ba + 0.087266) - 0.174533) / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -1739,7 +1748,7 @@ class Eq_25(HardwoodVolumeEquation_NoX):
                                     z**41.0) * (ht**2) / 10000000.0)
 
         cvt = 0.00545415 * dbh**2 * (ht - 4.5) * f
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -1765,7 +1774,7 @@ class Eq_25(HardwoodVolumeEquation_NoX):
                     * (ba + 0.087266) - 0.174533) / 0.912733)
 
         cvts = np.clip(cvts, 0, None)
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -1775,7 +1784,7 @@ class Eq_25(HardwoodVolumeEquation_NoX):
         tarif = self.calc_tarif(dbh, ht)
 
         cv4 = tarif * (ba - 0.087266) / 0.912733
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -1785,7 +1794,7 @@ class Eq_25(HardwoodVolumeEquation_NoX):
         cv4 = self.calc_cv4(dbh, ht)
 
         cv8 = rc8 * cv4
-        cv8[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv8[np.logical_or(dbh < 11, ht <= 0)] = 0
 
         return cv8
 
@@ -1802,7 +1811,7 @@ class Eq_26(HardwoodVolumeEquation_NoX):
         cvtsl = -2.672775 + 1.920617 * np.log10(dbh) + 1.074024 * np.log10(ht)
 
         cvts = 10**cvtsl
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -1824,7 +1833,7 @@ class Eq_26(HardwoodVolumeEquation_NoX):
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * (
             (1.033 * (1.0 + 1.382937 * np.exp(-4.015292 * (dbh / 10.0))))
             * (ba + 0.087266) - 0.174533) / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -1833,7 +1842,7 @@ class Eq_26(HardwoodVolumeEquation_NoX):
         tarif = self.calc_tarif(dbh, ht)
 
         cv4 = tarif * (ba - 0.087266) / 0.912733
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -1843,7 +1852,7 @@ class Eq_26(HardwoodVolumeEquation_NoX):
         rc8 = 0.983 - (0.983 * 0.65**(dbh - 8.6))
         cv8 = rc8 * cv4
 
-        cv8[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv8[np.logical_or(dbh < 11, ht <= 0)] = 0
 
         return cv8
 
@@ -1860,7 +1869,7 @@ class Eq_27(HardwoodVolumeEquation_NoX):
         cvtsl = -2.945047 + 1.803973 * np.log10(dbh) + 1.238853 * np.log10(ht)
 
         cvts = 10**cvtsl
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -1882,7 +1891,7 @@ class Eq_27(HardwoodVolumeEquation_NoX):
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * (
             (1.033 * (1.0 + 1.382937 * np.exp(-4.015292 * (dbh / 10.0))))
             * (ba + 0.087266) - 0.174533) / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -1891,7 +1900,7 @@ class Eq_27(HardwoodVolumeEquation_NoX):
         tarif = self.calc_tarif(dbh, ht)
 
         cv4 = tarif * (ba - 0.087266) / 0.912733
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -1900,7 +1909,7 @@ class Eq_27(HardwoodVolumeEquation_NoX):
         rc8 = 0.983 - (0.983 * 0.65**(dbh - 8.6))
 
         cv8 = rc8 * cv4
-        cv8[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv8[np.logical_or(dbh < 11, ht <= 0)] = 0
 
         return cv8
 
@@ -1917,7 +1926,7 @@ class Eq_28(HardwoodVolumeEquation_NoX):
         cvtsl = -2.635360 + 1.946034 * np.log10(dbh) + 1.024793 * np.log10(ht)
 
         cvts = 10**cvtsl
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -1939,7 +1948,7 @@ class Eq_28(HardwoodVolumeEquation_NoX):
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * (
             (1.033 * (1.0 + 1.382937 * np.exp(-4.015292 * (dbh / 10.0))))
             * (ba + 0.087266) - 0.174533) / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -1948,7 +1957,7 @@ class Eq_28(HardwoodVolumeEquation_NoX):
         tarif = self.calc_tarif(dbh, ht)
 
         cv4 = tarif * (ba - 0.087266) / 0.912733
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -1957,7 +1966,7 @@ class Eq_28(HardwoodVolumeEquation_NoX):
         rc8 = 0.983 - (0.983 * 0.65**(dbh - 8.6))
 
         cv8 = rc8 * cv4
-        cv8[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv8[np.logical_or(dbh < 11, ht <= 0)] = 0
 
         return cv8
 
@@ -1974,7 +1983,7 @@ class Eq_29(HardwoodVolumeEquation_NoX):
         cvtsl = -2.757813 + 1.911681 * np.log10(dbh) + 1.105403 * np.log10(ht)
 
         cvts = 10**cvtsl
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -1996,7 +2005,7 @@ class Eq_29(HardwoodVolumeEquation_NoX):
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * (
             (1.033 * (1.0 + 1.382937 * np.exp(-4.015292 * (dbh / 10.0))))
             * (ba + 0.087266) - 0.174533) / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -2005,7 +2014,7 @@ class Eq_29(HardwoodVolumeEquation_NoX):
         tarif = self.calc_tarif(dbh, ht)
 
         cv4 = tarif * (ba - 0.087266) / 0.912733
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -2014,7 +2023,7 @@ class Eq_29(HardwoodVolumeEquation_NoX):
         rc8 = 0.983 - (0.983 * 0.65**(dbh - 8.6))
 
         cv8 = rc8 * cv4
-        cv8[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv8[np.logical_or(dbh < 11, ht <= 0)] = 0
 
         return cv8
 
@@ -2031,7 +2040,7 @@ class Eq_30(HardwoodVolumeEquation_NoX):
         cvtsl = -2.770324 + 1.885813 * np.log10(dbh) + 1.119043 * np.log10(ht)
 
         cvts = 10**cvtsl
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -2053,7 +2062,7 @@ class Eq_30(HardwoodVolumeEquation_NoX):
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * (
             (1.033 * (1.0 + 1.382937 * np.exp(-4.015292 * (dbh / 10.0))))
             * (ba + 0.087266) - 0.174533) / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -2062,7 +2071,7 @@ class Eq_30(HardwoodVolumeEquation_NoX):
         tarif = self.calc_tarif(dbh, ht)
 
         cv4 = tarif * (ba - 0.087266) / 0.912733
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -2071,7 +2080,7 @@ class Eq_30(HardwoodVolumeEquation_NoX):
         rc8 = 0.983 - (0.983 * 0.65**(dbh - 8.6))
 
         cv8 = rc8 * cv4
-        cv8[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv8[np.logical_or(dbh < 11, ht <= 0)] = 0
 
         return cv8
 
@@ -2087,7 +2096,7 @@ class Eq_31(HardwoodVolumeEquation_NoX):
 
     def calc_cvts(self, dbh, ht):
         cvts = 0.0016144 * dbh**2 * ht
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -2109,7 +2118,7 @@ class Eq_31(HardwoodVolumeEquation_NoX):
         cvt = tarif * (0.9679 - 0.1051 * 0.5523**(dbh - 1.5)) * (
             (1.033 * (1.0 + 1.382937 * np.exp(-4.015292 * (dbh / 10.0))))
             * (ba + 0.087266) - 0.174533) / 0.912733
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -2118,7 +2127,7 @@ class Eq_31(HardwoodVolumeEquation_NoX):
         tarif = self.calc_tarif(dbh, ht)
 
         cv4 = tarif * (ba - 0.087266) / 0.912733
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -2127,7 +2136,7 @@ class Eq_31(HardwoodVolumeEquation_NoX):
         rc8 = 0.983 - (0.983 * 0.65**(dbh - 8.6))
 
         cv8 = rc8 * cv4
-        cv8[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv8[np.logical_or(dbh < 11, ht <= 0)] = 0
 
         return cv8
 
@@ -2142,19 +2151,19 @@ class Eq_32(HardwoodVolumeEquation_WithX):
 
     def calc_cvts(self, dbh, ht):
         cvts = 0.0120372263 * dbh**2.02232 * ht**0.68638
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
     def calc_cv4(self, dbh, ht):
         cv4 = 0.0055212937 * dbh**2.07202 * ht**0.77467
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
     def calc_cv8(self, dbh, ht):
         cv8 = 0.0018985111 * dbh**2.38285 * ht**0.77105
-        cv8[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv8[np.logical_or(dbh < 11, ht <= 0)] = 0
 
         return cv8
 
@@ -2163,7 +2172,7 @@ class Eq_32(HardwoodVolumeEquation_WithX):
         rts = 0.9679 - 0.1051 * 0.5523**(dbh - 1.5)
 
         cvt = cvts * rts
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -2187,19 +2196,19 @@ class Eq_33(HardwoodVolumeEquation_WithX):
 
     def calc_cvts(self, dbh, ht):
         cvts = 0.0057821322 * dbh**1.94553 * ht**0.88389
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
     def calc_cv4(self, dbh, ht):
         cv4 = 0.0016380753 * dbh**2.05910 * ht**1.05293
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
     def calc_cv8(self, dbh, ht):
         cv8 = 0.0018985111 * dbh**2.38285 * ht**0.77105
-        cv8[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv8[np.logical_or(dbh < 11, ht <= 0)] = 0
 
         return cv8
 
@@ -2208,7 +2217,7 @@ class Eq_33(HardwoodVolumeEquation_WithX):
         rts = 0.9679 - 0.1051 * 0.5523**(dbh - 1.5)
 
         cvt = cvts * rts
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -2232,19 +2241,19 @@ class Eq_34(HardwoodVolumeEquation_WithX):
 
     def calc_cvts(self, dbh, ht):
         cvts = 0.0058870024 * dbh**1.94165 * ht**0.86562
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
     def calc_cv4(self, dbh, ht):
         cv4 = 0.0005774970 * dbh**2.19576 * ht**1.14078
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
     def calc_cv8(self, dbh, ht):
         cv8 = 0.0002526443 * dbh**2.30949 * ht**1.21069
-        cv8[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv8[np.logical_or(dbh < 11, ht <= 0)] = 0
 
         return cv8
 
@@ -2253,7 +2262,7 @@ class Eq_34(HardwoodVolumeEquation_WithX):
         rts = 0.9679 - 0.1051 * 0.5523**(dbh - 1.5)
 
         cvt = cvts * rts
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -2277,19 +2286,19 @@ class Eq_35(HardwoodVolumeEquation_WithX):
 
     def calc_cvts(self, dbh, ht):
         cvts = 0.0042870077 * dbh**2.33631 * ht**0.74872
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
     def calc_cv4(self, dbh, ht):
         cv4 = 0.0009684363 * dbh**2.39565 * ht**0.98878
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
     def calc_cv8(self, dbh, ht):
         cv8 = 0.0001880044 * dbh**1.87346 * ht**1.62443
-        cv8[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv8[np.logical_or(dbh < 11, ht <= 0)] = 0
 
         return cv8
 
@@ -2298,7 +2307,7 @@ class Eq_35(HardwoodVolumeEquation_WithX):
         rts = 0.9679 - 0.1051 * 0.5523**(dbh - 1.5)
 
         cvt = cvts * rts
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -2322,18 +2331,20 @@ class Eq_36(HardwoodVolumeEquation_WithX):
 
     def calc_cvts(self, dbh, ht):
         cvts = 0.0191453191 * dbh**2.40248 * ht**0.28060
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
     def calc_cv4(self, dbh, ht):
         cv4 = 0.0053866353 * dbh**2.61268 * ht**0.31103
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
     def calc_cv8(self, dbh, ht):
         cv8 = self.calc_cv4(dbh, ht)
+        cv8[np.logical_or(dbh < 11, ht <= 0)] = 0
+
         return cv8
 
     def calc_cvt(self, dbh, ht):
@@ -2341,7 +2352,7 @@ class Eq_36(HardwoodVolumeEquation_WithX):
         rts = 0.9679 - 0.1051 * 0.5523**(dbh - 1.5)
 
         cvt = cvts * rts
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -2365,13 +2376,13 @@ class Eq_37(HardwoodVolumeEquation_WithX):
 
     def calc_cvts(self, dbh, ht):
         cvts = 0.0101786350 * dbh**2.22462 * ht**0.57561
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
     def calc_cv4(self, dbh, ht):
         cv4 = 0.0034214162 * dbh**2.35347 * ht**0.69586
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -2388,7 +2399,7 @@ class Eq_37(HardwoodVolumeEquation_WithX):
         fc = np.where((diam_9ft >= 9) & (ht >= 9), 10, 1)
 
         cv8 = 0.0004236332 * dbh**2.10316 * ht**1.08584 * fc**0.40017
-        cv8[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv8[np.logical_or(dbh < 11, ht <= 0)] = 0
 
         return cv8
 
@@ -2397,7 +2408,7 @@ class Eq_37(HardwoodVolumeEquation_WithX):
         rts = 0.9679 - 0.1051 * 0.5523**(dbh - 1.5)
 
         cvt = cvts * rts
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -2421,13 +2432,13 @@ class Eq_38(HardwoodVolumeEquation_WithX):
 
     def calc_cvts(self, dbh, ht):
         cvts = 0.0070538108 * dbh**1.97437 * ht**0.85034
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
     def calc_cv4(self, dbh, ht):
         cv4 = 0.0036795695 * dbh**2.12635 * ht**0.83339
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -2444,7 +2455,7 @@ class Eq_38(HardwoodVolumeEquation_WithX):
         fc = np.where((diam_9ft >= 9) & (ht >= 9), 10, 1)
 
         cv8 = 0.0012478663 * dbh**2.68099 * ht**0.42441 * fc**0.28385
-        cv8[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv8[np.logical_or(dbh < 11, ht <= 0)] = 0
 
         return cv8
 
@@ -2453,7 +2464,7 @@ class Eq_38(HardwoodVolumeEquation_WithX):
         rts = 0.9679 - 0.1051 * 0.5523**(dbh - 1.5)
 
         cvt = cvts * rts
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -2477,13 +2488,13 @@ class Eq_39(HardwoodVolumeEquation_WithX):
 
     def calc_cvts(self, dbh, ht):
         cvts = 0.0125103008 * dbh**2.33089 * ht**0.46100
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
     def calc_cv4(self, dbh, ht):
         cv4 = 0.0042324071 * dbh**2.53987 * ht**0.50591
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -2500,7 +2511,7 @@ class Eq_39(HardwoodVolumeEquation_WithX):
         fc = np.where((diam_9ft >= 9) & (ht >= 9), 10, 1)
 
         cv8 = 0.0036912408 * dbh**1.79732 * ht**0.83884 * fc**0.15958
-        cv8[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv8[np.logical_or(dbh < 11, ht <= 0)] = 0
 
         return cv8
 
@@ -2509,7 +2520,7 @@ class Eq_39(HardwoodVolumeEquation_WithX):
         rts = 0.9679 - 0.1051 * 0.5523**(dbh - 1.5)
 
         cvt = cvts * rts
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -2533,13 +2544,13 @@ class Eq_40(HardwoodVolumeEquation_WithX):
 
     def calc_cvts(self, dbh, ht):
         cvts = 0.0067322665 * dbh**1.96628 * ht**0.83458
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
     def calc_cv4(self, dbh, ht):
         cv4 = 0.0025616425 * dbh**1.99295 * ht**1.01532
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -2556,7 +2567,7 @@ class Eq_40(HardwoodVolumeEquation_WithX):
         fc = np.where((diam_9ft >= 9) & (ht >= 9), 10, 1)
 
         cv8 = 0.0006181530 * dbh**1.72635 * ht**1.26462 * fc**0.37868
-        cv8[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv8[np.logical_or(dbh < 11, ht <= 0)] = 0
 
         return cv8
 
@@ -2565,7 +2576,7 @@ class Eq_40(HardwoodVolumeEquation_WithX):
         rts = 0.9679 - 0.1051 * 0.5523**(dbh - 1.5)
 
         cvt = cvts * rts
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -2589,13 +2600,13 @@ class Eq_41(HardwoodVolumeEquation_WithX):
 
     def calc_cvts(self, dbh, ht):
         cvts = 0.0072695058 * dbh**2.14321 * ht**0.74220
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
     def calc_cv4(self, dbh, ht):
         cv4 = 0.0024277027 * dbh**2.25575 * ht**0.87108
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -2612,7 +2623,7 @@ class Eq_41(HardwoodVolumeEquation_WithX):
         fc = np.where((diam_9ft >= 9) & (ht >= 9), 10, 1)
 
         cv8 = 0.0008281647 * dbh**2.10651 * ht**0.91215 * fc**0.32652
-        cv8[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv8[np.logical_or(dbh < 11, ht <= 0)] = 0
 
         return cv8
 
@@ -2621,7 +2632,7 @@ class Eq_41(HardwoodVolumeEquation_WithX):
         rts = 0.9679 - 0.1051 * 0.5523**(dbh - 1.5)
 
         cvt = cvts * rts
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -2645,13 +2656,13 @@ class Eq_42(HardwoodVolumeEquation_WithX):
 
     def calc_cvts(self, dbh, ht):
         cvts = 0.0097438611 * dbh**2.20527 * ht**0.61190
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
     def calc_cv4(self, dbh, ht):
         cv4 = 0.0031670596 * dbh**2.32519 * ht**0.74348
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -2668,7 +2679,7 @@ class Eq_42(HardwoodVolumeEquation_WithX):
         fc = np.where((diam_9ft >= 9) & (ht >= 9), 10, 1)
 
         cv8 = 0.0006540144 * dbh**2.24437 * ht**0.81358 * fc**0.43381
-        cv8[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv8[np.logical_or(dbh < 11, ht <= 0)] = 0
 
         return cv8
 
@@ -2677,7 +2688,7 @@ class Eq_42(HardwoodVolumeEquation_WithX):
         rts = 0.9679 - 0.1051 * 0.5523**(dbh - 1.5)
 
         cvt = cvts * rts
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -2701,13 +2712,13 @@ class Eq_43(HardwoodVolumeEquation_WithX):
 
     def calc_cvts(self, dbh, ht):
         cvts = 0.0065261029 * dbh**2.31958 * ht**0.62528
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
     def calc_cv4(self, dbh, ht):
         cv4 = 0.0024574847 * dbh**2.53284 * ht**0.60764
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -2724,7 +2735,7 @@ class Eq_43(HardwoodVolumeEquation_WithX):
         fc = np.where((diam_9ft >= 9) & (ht >= 9), 10, 1)
 
         cv8 = 0.0006540144 * dbh**2.24437 * ht**0.81358 * fc**0.43381
-        cv8[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv8[np.logical_or(dbh < 11, ht <= 0)] = 0
 
         return cv8
 
@@ -2733,7 +2744,7 @@ class Eq_43(HardwoodVolumeEquation_WithX):
         rts = 0.9679 - 0.1051 * 0.5523**(dbh - 1.5)
 
         cvt = cvts * rts
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -2757,13 +2768,13 @@ class Eq_44(HardwoodVolumeEquation_WithX):
 
     def calc_cvts(self, dbh, ht):
         cvts = 0.0136818837 * dbh**2.02989 * ht**0.63257
-        cvts[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvts
 
     def calc_cv4(self, dbh, ht):
         cv4 = 0.0041192264 * dbh**2.14915 * ht**0.77843
-        cv4[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv4[np.logical_or(dbh < 5, ht <= 0)] = 0
 
         return cv4
 
@@ -2780,7 +2791,7 @@ class Eq_44(HardwoodVolumeEquation_WithX):
         fc = np.where((diam_9ft >= 9) & (ht >= 9), 10, 1)
 
         cv8 = 0.0006540144 * dbh**2.24437 * ht**0.81358 * fc**0.43381
-        cv8[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cv8[np.logical_or(dbh < 11, ht <= 0)] = 0
 
         return cv8
 
@@ -2789,7 +2800,7 @@ class Eq_44(HardwoodVolumeEquation_WithX):
         rts = 0.9679 - 0.1051 * 0.5523**(dbh - 1.5)
 
         cvt = cvts * rts
-        cvt[np.logical_or(dbh <= 0, ht <= 0)] = 0
+        cvt[np.logical_or(dbh < 1, ht <= 0)] = 0
 
         return cvt
 
@@ -2820,7 +2831,7 @@ class Eq_45(HardwoodVolumeEquation_WithX):
             (-0.13363 + (0.128222 * (factor**(1. / 3.))) + 0.080208)**3)
 
         cvts = np.clip(cvts, 0.1, None)
-        cvts[np.logical_or(drc <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(drc < 1, ht <= 0)] = 0
 
         return cvts
 
@@ -2852,7 +2863,7 @@ class Eq_46(HardwoodVolumeEquation_WithX):
                       / (drc[mask]**2 * ht[mask] / 1000))
 
         cvts = np.clip(cvts, 0.1, None)
-        cvts[np.logical_or(drc <= 0, ht <= 0)] = 0
+        cvts[np.logical_or(drc < 1, ht <= 0)] = 0
 
         return cvts
 
