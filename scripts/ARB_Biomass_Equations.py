@@ -65,7 +65,7 @@ def BB_11(DBH, HT, wood_density = None): # BIOPAK EQUATION 899
 
 
 def BB_12(DBH, HT = None, wood_density = None): # BIOPAK EQUATION 385
-    return math.exp(-13.3146 + 2.8594 * math.log(DBH))
+    return math.exp(-13.3146 + 2.8594 * math.log(DBH)) * 1000
 
 
 def BB_13(DBH, HT, wood_density = None): # BIOPAK EQUATION 461

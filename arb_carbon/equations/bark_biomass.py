@@ -113,7 +113,7 @@ class BB_11(BarkBiomass):  # BIOPAK EQUATION 899
 
 class BB_12(BarkBiomass):  # BIOPAK EQUATION 385
     def calc_biomass(self, dbh, ht=None, wood_density=None):
-        return np.exp(-13.3146 + 2.8594 * np.log(dbh))
+        return np.exp(-13.3146 + 2.8594 * np.log(dbh)) * 1000
 
 
 class BB_13(BarkBiomass):  # BIOPAK EQUATION 461
